@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page introuvable — Kemora Agency</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#C6A16E">
+<link rel="icon" href="/assets/favicon/favicon.ico">
+<link rel="manifest" href="/manifest.json">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --black: #050505; --black2: #0a0a0a; --gold: #C6A16E; --white: #f5f0e8;
+    --muted: rgba(245,240,232,0.45); --border: rgba(198,161,110,0.18); --border2: rgba(198,161,110,0.08);
+    --serif: 'Cormorant Garamond', Georgia, serif; --sans: 'Jost', sans-serif;
+    --ease: cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--black); color: var(--white); font-family: var(--sans); font-weight: 300; line-height: 1.7; overflow-x: hidden; -webkit-font-smoothing: antialiased; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; opacity: 0.5; }
+  .inner { position: relative; z-index: 1; max-width: 560px; }
+  .num { font-family: var(--serif); font-size: clamp(6rem,15vw,10rem); font-weight: 300; color: rgba(198,161,110,0.12); line-height: 1; letter-spacing: -0.04em; }
+  .line { width: 48px; height: 1px; background: var(--gold); margin: 2rem auto; }
+  h1 { font-family: var(--serif); font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 400; color: var(--gold); margin-bottom: 1.2rem; }
+  h1 em { font-style: italic; }
+  p { font-size: 0.9rem; color: var(--muted); line-height: 1.9; margin-bottom: 2.5rem; }
+  .btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-gold { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--gold); color: var(--black); font-family: var(--sans); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; padding: 0.9rem 2rem; text-decoration: none; transition: all 0.3s var(--ease); }
+  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(198,161,110,0.3); }
+  .btn-outline { display: inline-flex; align-items: center; gap: 0.5rem; background: transparent; color: var(--gold); font-family: var(--sans); font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; padding: 0.9rem 2rem; border: 1px solid var(--border); text-decoration: none; transition: all 0.3s var(--ease); }
+  .btn-outline:hover { border-color: var(--gold); }
+  .lang-note { margin-top: 3rem; font-size: 0.72rem; color: rgba(245,240,232,0.25); }
+</style>
+</head>
+<body>
+<div class="inner">
+  <div class="num">404</div>
+  <div class="line"></div>
+  <h1>Cette page<br>n'existe <em>pas</em></h1>
+  <p id="msg">La page que vous cherchez est introuvable. Elle a peut-être été déplacée ou n'existe plus.</p>
+  <div class="btns">
+    <a href="/fr/index.html" class="btn-gold" id="homeBtn">Retourner à l'accueil</a>
+    <a href="/fr/index.html#offre" class="btn-outline" id="offerBtn">Découvrir l'offre</a>
+  </div>
+  <p class="lang-note">Page not found · Página no encontrada · Seite nicht gefunden · Página não encontrada · Pagina non trovata</p>
+</div>
+<script>
+(function(){
+  var lang = localStorage.getItem('kemora-lang') || 'fr';
+  var msgs = {
+    en: {h:'This page<br>does not <em>exist</em>', p:'The page you are looking for cannot be found. It may have been moved or no longer exists.', home:'Back to home', offer:'Discover our offer'},
+    es: {h:'Esta página<br>no <em>existe</em>', p:'La página que busca no se encuentra. Es posible que se haya movido o que ya no exista.', home:'Volver al inicio', offer:'Descubrir la oferta'},
+    de: {h:'Diese Seite<br>existiert <em>nicht</em>', p:'Die gesuchte Seite wurde nicht gefunden. Sie wurde möglicherweise verschoben oder existiert nicht mehr.', home:'Zurück zur Startseite', offer:'Angebot entdecken'},
+    pt: {h:'Esta página<br>não <em>existe</em>', p:'A página que procura não foi encontrada. Pode ter sido movida ou já não existe.', home:'Voltar ao início', offer:'Descobrir a oferta'},
+    it: {h:'Questa pagina<br>non <em>esiste</em>', p:'La pagina che sta cercando non è stata trovata. Potrebbe essere stata spostata o non esistere più.', home:'Torna alla home', offer:'Scopri l\'offerta'},
+  };
+  var t = msgs[lang];
+  var base = '/'+lang+'/';
+  if(t){
+    document.querySelector('h1').innerHTML = t.h;
+    document.getElementById('msg').textContent = t.p;
+    document.getElementById('homeBtn').textContent = t.home;
+    document.getElementById('homeBtn').href = base+'index.html';
+    document.getElementById('offerBtn').textContent = t.offer;
+    document.getElementById('offerBtn').href = base+'index.html#offre';
+  }
+})();
+</script>
+</body>
+</html>

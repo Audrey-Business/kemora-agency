@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fondations — Kemora Agency</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black:    #050505;
+    --black2:   #0a0a0a;
+    --black3:   #111111;
+    --glass:    rgba(255,255,255,0.03);
+    --gold:     #C6A16E;
+    --gold-dim: #8a6e49;
+    --white:    #f5f0e8;
+    --muted:    rgba(245,240,232,0.45);
+    --border:   rgba(198,161,110,0.18);
+    --border2:  rgba(198,161,110,0.08);
+    --serif:    'Cormorant Garamond', Georgia, serif;
+    --sans:     'Jost', sans-serif;
+    --ease:     cubic-bezier(0.25,0.46,0.45,0.94);
+    --glow:     0 0 40px rgba(198,161,110,0.08);
+  }
+
+  html { scroll-behavior: smooth; }
+  body { background: var(--black); color: var(--white); font-family: var(--sans); font-weight: 300; line-height: 1.7; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; opacity: 0.5; }
+
+  h1, h2, h3 { font-family: var(--serif); font-weight: 400; }
+  h1 { font-size: clamp(2.8rem, 7vw, 5rem); line-height: 1.08; letter-spacing: -0.02em; }
+  h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); line-height: 1.14; letter-spacing: -0.01em; }
+  p  { font-size: clamp(0.9rem, 1.4vw, 1.02rem); }
+
+  .label { font-family: var(--sans); font-size: 0.68rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); }
+  .gold { color: var(--gold); }
+  .italic { font-style: italic; }
+  .muted { color: var(--muted); }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 clamp(1.5rem,5vw,4rem); }
+  .container-narrow { max-width: 720px; margin: 0 auto; padding: 0 clamp(1.5rem,5vw,4rem); }
+  .section { padding: clamp(4.5rem,9vw,8rem) 0; }
+  .divider-h { height: 1px; background: linear-gradient(to right, transparent, var(--border), transparent); }
+  .divider-center { width: 1px; height: 70px; background: linear-gradient(to bottom, transparent, var(--gold), transparent); margin: 0 auto; }
+
+  .btn-gold { display: inline-flex; align-items: center; gap: 0.6rem; background: var(--gold); color: var(--black); font-family: var(--sans); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; padding: 1rem 2.4rem; border: none; cursor: pointer; text-decoration: none; transition: all 0.3s var(--ease); position: relative; overflow: hidden; }
+  .btn-gold::after { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.12); opacity: 0; transition: opacity 0.3s; }
+  .btn-gold:hover::after { opacity: 1; }
+  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(198,161,110,0.3); }
+  .btn-outline { display: inline-flex; align-items: center; gap: 0.6rem; background: transparent; color: var(--gold); font-family: var(--sans); font-size: 0.78rem; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; padding: 0.95rem 2.2rem; border: 1px solid var(--border); cursor: pointer; text-decoration: none; transition: all 0.3s var(--ease); }
+  .btn-outline:hover { border-color: var(--gold); background: rgba(198,161,110,0.06); }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.4rem clamp(1.5rem,5vw,4rem); display: flex; align-items: center; justify-content: space-between; background: rgba(5,5,5,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border2); transition: all 0.3s; }
+  .nav-brand { font-family: var(--serif); font-size: 1.15rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--white); text-decoration: none; }
+  .nav-back { font-family: var(--sans); font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; transition: color 0.3s; }
+  .nav-back:hover { color: var(--gold); }
+  .nav-back svg { width: 14px; height: 14px; }
+
+  /* HERO with image */
+  #hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding-top: 130px; overflow: hidden; }
+  .hero-img { position: absolute; inset: 0; z-index: 0; }
+  .hero-img img { width: 100%; height: 100%; object-fit: cover; }
+  .hero-img::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 80% at 50% 45%, rgba(5,5,5,0.3) 0%, rgba(5,5,5,0.75) 70%, var(--black) 100%); }
+  .hero-content { position: relative; z-index: 2; max-width: 760px; }
+  .hero-eyebrow { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 2.5rem; }
+  .hero-eyebrow-line { width: 36px; height: 1px; background: var(--gold); }
+  .hero-content h1 { margin-bottom: 2rem; }
+  .hero-content h1 em { font-style: italic; color: var(--gold); }
+  .hero-tagline { color: var(--white); font-size: clamp(1.05rem,1.8vw,1.3rem); max-width: 600px; margin: 0 auto; line-height: 1.7; opacity: 0.9; font-family: var(--serif); font-style: italic; }
+  .hero-founder-row { display: flex; justify-content: flex-end; max-width: 480px; margin: 0.9rem auto 0; }
+  .hero-founder { font-family: var(--serif); font-style: italic; font-size: clamp(1rem, 1.6vw, 1.3rem); font-weight: 300; color: var(--gold); letter-spacing: 0.04em; opacity: 0.85; }
+  .hero-scroll { position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%); z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 0.8rem; }
+  .hero-scroll span { font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .hero-scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--gold), transparent); animation: scrollPulse 2s ease-in-out infinite; }
+  @keyframes scrollPulse { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+  /* OPENING — le constat */
+  #opening { position: relative; }
+  .opening-lead { font-family: var(--serif); font-size: clamp(1.5rem,3vw,2.2rem); font-weight: 300; line-height: 1.5; color: var(--white); text-align: center; }
+  .opening-lead em { font-style: italic; color: var(--gold); }
+  .prose p { color: var(--muted); margin-bottom: 1.6rem; line-height: 2; font-size: clamp(0.95rem,1.5vw,1.08rem); }
+  .prose p.lead-white { color: var(--white); }
+  .prose .spacer { height: 2rem; }
+
+  /* PULL QUOTE */
+  .pullquote { text-align: center; padding: clamp(3rem,6vw,5rem) 0; }
+  .pullquote p { font-family: var(--serif); font-style: italic; font-size: clamp(1.6rem,3.5vw,2.6rem); font-weight: 300; line-height: 1.4; color: var(--white); max-width: 800px; margin: 0 auto; }
+  .pullquote p em { color: var(--gold); font-style: italic; }
+
+  /* CREDO — Je crois */
+  #credo { background: var(--black2); }
+  .credo-header { text-align: center; margin-bottom: 4rem; }
+  .credo-header h2 { margin-top: 1rem; }
+  .credo-header h2 em { font-style: italic; color: var(--gold); }
+  .credo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 1px; border: 1px solid var(--border2); }
+  .credo-item { padding: 2.5rem; background: var(--black); transition: background 0.3s; }
+  .credo-item:hover { background: rgba(198,161,110,0.02); }
+  .credo-item-mark { font-family: var(--serif); font-size: 1.4rem; color: var(--gold); margin-bottom: 1rem; }
+  .credo-item h3 { font-size: 1.1rem; margin-bottom: 0.6rem; color: var(--white); }
+  .credo-item p { font-size: 0.85rem; color: var(--muted); line-height: 1.7; }
+  .credo-signature { font-family: var(--serif); font-style: italic; font-size: clamp(1.4rem, 2.5vw, 2rem); font-weight: 300; color: var(--gold); text-align: right; margin-top: 2.5rem; opacity: 0.85; letter-spacing: 0.02em; }
+
+  /* AUDIENCE — à qui je m'adresse */
+  #audience { position: relative; }
+  .audience-header { margin-bottom: 3.5rem; }
+  .audience-header h2 { margin-top: 1rem; }
+  .audience-header h2 em { font-style: italic; color: var(--gold); }
+  .audience-list { display: flex; flex-direction: column; gap: 1px; }
+  .audience-item { padding: 1.8rem 2rem; background: var(--glass); border: 1px solid var(--border2); display: flex; gap: 1.5rem; align-items: flex-start; transition: border-color 0.3s, background 0.3s; }
+  .audience-item:hover { border-color: var(--border); background: rgba(198,161,110,0.02); }
+  .audience-num { font-family: var(--serif); font-size: 1.4rem; color: var(--gold); flex-shrink: 0; line-height: 1.2; }
+  .audience-item p { color: var(--white); font-size: clamp(0.95rem,1.5vw,1.05rem); line-height: 1.6; }
+
+  /* LUXE — le vrai luxe */
+  #luxe { background: var(--black2); position: relative; overflow: hidden; }
+  .luxe-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(198,161,110,0.05), transparent); }
+  .luxe-inner { position: relative; z-index: 1; text-align: center; max-width: 760px; margin: 0 auto; }
+  .luxe-inner .label { display: block; margin-bottom: 2rem; }
+  .luxe-statement { font-family: var(--serif); font-size: clamp(1.8rem,4vw,3rem); font-weight: 300; line-height: 1.35; color: var(--white); margin-bottom: 2.5rem; }
+  .luxe-statement em { font-style: italic; color: var(--gold); }
+  .luxe-list { display: flex; flex-direction: column; gap: 0.8rem; max-width: 480px; margin: 0 auto; }
+  .luxe-list p { font-family: var(--serif); font-style: italic; font-size: clamp(1.1rem,2vw,1.4rem); color: var(--muted); }
+
+  /* CLOSING */
+  #closing { text-align: center; padding: clamp(5rem,10vw,8rem) 0; position: relative; overflow: hidden; }
+  .closing-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 70% at 50% 50%, rgba(198,161,110,0.05), transparent); }
+  .closing-inner { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; }
+  .closing-inner h2 { margin: 1rem 0 1.5rem; }
+  .closing-inner h2 em { font-style: italic; color: var(--gold); }
+  .closing-inner p { color: var(--muted); margin-bottom: 2.5rem; line-height: 1.9; font-size: clamp(0.95rem,1.5vw,1.08rem); }
+  .closing-buttons { display: flex; gap: 1.2rem; justify-content: center; flex-wrap: wrap; }
+
+  /* FOOTER */
+  footer { padding: 3rem clamp(1.5rem,5vw,4rem); border-top: 1px solid var(--border2); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
+  .footer-brand { font-family: var(--serif); font-size: 0.95rem; letter-spacing: 0.12em; text-transform: uppercase; }
+  .footer-links { display: flex; gap: 2rem; flex-wrap: wrap; }
+  .footer-links a { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.3s; }
+  .footer-links a:hover { color: var(--gold); }
+  .footer-copy { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.06em; width: 100%; border-top: 1px solid var(--border2); padding-top: 1.5rem; margin-top: 0.5rem; }
+
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  @media (max-width: 900px) {
+    footer { flex-direction: column; text-align: center; }
+    .footer-links { justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-brand">Kemora Agency</a>
+  <a href="index.html" class="nav-back">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 12L6 8l4-4"/></svg>
+    Retour à l'accueil
+  </a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-img">
+    <img src="assets/images/fondations.webp" alt="Passage de lumière dans l'obscurité — fondations de Kemora Agency">
+  </div>
+  <div class="hero-content">
+    <div class="hero-eyebrow reveal">
+      <div class="hero-eyebrow-line"></div>
+      <span class="label">Fondations</span>
+      <div class="hero-eyebrow-line"></div>
+    </div>
+    <h1 class="reveal reveal-delay-1">Une vision moderne<br>de <em>l'indépendance</em></h1>
+    <p class="hero-tagline reveal reveal-delay-2">« Le vrai luxe, c'est de pouvoir disposer de son temps. »</p>
+    <div class="hero-founder-row">
+      <span></span>
+      <p class="hero-founder reveal reveal-delay-3">— Audrey, Fondatrice Kemora Agency</p>
+    </div>
+  </div>
+  <div class="hero-scroll reveal reveal-delay-3">
+    <span>Découvrir</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
+
+<!-- OPENING -->
+<section id="opening" class="section">
+  <div class="container-narrow">
+    <p class="opening-lead reveal">Chaque jour, des millions de personnes se réveillent avec le sentiment discret d'être en train de <em>passer à côté de leur propre vie</em>.</p>
+    <div class="divider-center reveal reveal-delay-1" style="margin-top:3rem; margin-bottom:3rem;"></div>
+    <div class="prose">
+      <p class="reveal">Elles avancent vite. Elles cochent des cases. Elles remplissent des agendas. Elles donnent leur temps, leur énergie, leur créativité… souvent au détriment d'elles-mêmes.</p>
+      <p class="reveal">Et pourtant, derrière cette routine parfaitement acceptée par le monde, il y a des rêves silencieux. Des projets remis à plus tard. Des ambitions étouffées par le manque de temps, de structure ou de direction.</p>
+      <p class="reveal lead-white">Je connais cette réalité parce que je l'ai observée de près. Chez des proches. Chez des entrepreneurs talentueux. Chez des femmes et des hommes brillants qui ne manquaient ni d'intelligence, ni de volonté — seulement d'espace pour construire autre chose.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PULL QUOTE 1 -->
+<div class="pullquote">
+  <div class="container">
+    <p class="reveal">Kemora Agency est née de cette <em>prise de conscience</em>.</p>
+  </div>
+</div>
+
+<!-- SUITE -->
+<section class="section" style="padding-top:0;">
+  <div class="container-narrow">
+    <div class="prose">
+      <p class="reveal">Pas d'une envie de « vendre du rêve ». Mais d'une conviction profonde : aujourd'hui, il est possible de créer une vie plus libre, plus intelligente et plus alignée, sans tout abandonner ni tout risquer.</p>
+      <p class="reveal lead-white">Parce qu'à mes yeux, la véritable liberté ne consiste pas à fuir ses responsabilités. Elle consiste à reprendre le contrôle de son temps, de son énergie et de sa direction.</p>
+      <p class="reveal">Dans un monde qui glorifie l'urgence permanente, Kemora Agency défend une autre vision : celle d'un business construit avec intention, élégance et clarté. Ici, nous ne cherchons pas le succès éphémère. Nous construisons des structures capables de soutenir une croissance réelle, stable et évolutive.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CREDO — Je crois -->
+<section id="credo" class="section">
+  <div class="container">
+    <div class="credo-header">
+      <span class="label reveal">Mes convictions</span>
+      <h2 class="reveal reveal-delay-1">Ce en quoi<br>je <em>crois</em></h2>
+    </div>
+    <div class="credo-grid">
+      <div class="credo-item reveal">
+        <div class="credo-item-mark">I</div>
+        <h3>Les systèmes</h3>
+        <p>Je crois aux systèmes. Une structure bien construite produit ce que l'effort seul ne produit jamais.</p>
+      </div>
+      <div class="credo-item reveal reveal-delay-1">
+        <div class="credo-item-mark">II</div>
+        <h3>Les stratégies durables</h3>
+        <p>Je crois aux stratégies durables, pensées pour soutenir une croissance réelle, stable et évolutive.</p>
+      </div>
+      <div class="credo-item reveal reveal-delay-2">
+        <div class="credo-item-mark">III</div>
+        <h3>L'automatisation</h3>
+        <p>Je crois à l'automatisation comme levier d'émancipation moderne — un outil stratégique, pas une fin.</p>
+      </div>
+      <div class="credo-item reveal">
+        <div class="credo-item-mark">IV</div>
+        <h3>La progression intentionnelle</h3>
+        <p>Je ne crois pas aux raccourcis miraculeux. Je crois aux décisions intelligentes répétées chaque jour.</p>
+      </div>
+      <div class="credo-item reveal reveal-delay-1">
+        <div class="credo-item-mark">V</div>
+        <h3>Les fondations solides</h3>
+        <p>Aux fondations solides. À la puissance d'un système bien construit, capable de durer.</p>
+      </div>
+      <div class="credo-item reveal reveal-delay-2">
+        <div class="credo-item-mark">VI</div>
+        <h3>La liberté concrète</h3>
+        <p>Où la liberté cesse d'être un fantasme pour devenir une architecture concrète et tangible.</p>
+      </div>
+    </div>
+      <p class="credo-signature reveal">— Audrey</p>
+  </div>
+</section>
+<div class="pullquote">
+  <div class="container">
+    <p class="reveal">Kemora Agency n'est pas seulement une marque.<br>C'est une vision moderne de <em>l'indépendance</em>.</p>
+  </div>
+</div>
+
+<!-- AUDIENCE -->
+<section id="audience" class="section" style="padding-top:0;">
+  <div class="container-narrow">
+    <div class="audience-header">
+      <span class="label reveal">À qui je m'adresse</span>
+      <h2 class="reveal reveal-delay-1">À celles et ceux<br>qui savent qu'ils sont<br>capables de <em>plus</em></h2>
+    </div>
+    <div class="audience-list">
+      <div class="audience-item reveal">
+        <span class="audience-num">01</span>
+        <p>À celles et ceux qui veulent transformer leurs compétences, leurs idées ou leur présence digitale en un véritable actif.</p>
+      </div>
+      <div class="audience-item reveal reveal-delay-1">
+        <span class="audience-num">02</span>
+        <p>À celles et ceux qui refusent de rester prisonniers d'un modèle qui leur vole leur temps tout en leur faisant croire qu'ils doivent s'en satisfaire.</p>
+      </div>
+      <div class="audience-item reveal reveal-delay-2">
+        <span class="audience-num">03</span>
+        <p>À des personnes ambitieuses qui veulent créer davantage de liberté sans sacrifier leur équilibre.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LUXE -->
+<section id="luxe" class="section">
+  <div class="luxe-bg"></div>
+  <div class="container">
+    <div class="luxe-inner">
+      <span class="label reveal">Le vrai luxe</span>
+      <div class="luxe-statement reveal reveal-delay-1">Au fond, le luxe ultime n'est ni le statut, ni l'argent. Le vrai luxe, c'est de pouvoir disposer de <em>son temps</em>.</div>
+      <div class="luxe-list">
+        <p class="reveal">Créer sans pression permanente.</p>
+        <p class="reveal reveal-delay-1">Respirer sans culpabilité.</p>
+        <p class="reveal reveal-delay-2">Construire une activité qui travaille avec vous — et non contre vous.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section id="closing">
+  <div class="closing-bg"></div>
+  <div class="container">
+    <div class="closing-inner">
+      <span class="label reveal">Le but</span>
+      <h2 class="reveal reveal-delay-1">Reprendre<br>cette <em>liberté-là</em></h2>
+      <p class="reveal reveal-delay-2">Kemora Agency s'adresse à celles et ceux qui veulent reprendre le contrôle de leur temps, de leur énergie et de leur direction. Et si ces mots résonnent en vous, alors vous êtes probablement exactement au bon endroit.</p>
+      <div class="closing-buttons reveal reveal-delay-3">
+        <a href="index.html#offre" class="btn-gold">Découvrir notre offre</a>
+        <a href="reserver-appel.html" class="btn-outline">Réserver un appel</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Kemora Agency</div>
+  <div class="footer-links">
+    <a href="#">Mentions légales</a>
+    <a href="#">Politique de confidentialité</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <div class="footer-copy">© 2026 Kemora Agency — Tous droits réservés</div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  window.addEventListener('scroll', () => {
+    document.querySelector('nav').style.borderBottomColor = window.scrollY > 50 ? 'rgba(198,161,110,0.15)' : 'rgba(198,161,110,0.06)';
+  });
+</script>
+</body>
+</html>

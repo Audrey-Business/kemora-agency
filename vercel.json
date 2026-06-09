@@ -1,0 +1,30 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-XSS-Protection", "value": "1; mode=block" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
+        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" }
+      ]
+    }
+  ],
+  "redirects": [
+    { "source": "/produits/:path*",       "destination": "/fr/produits/:path*",      "permanent": true },
+    { "source": "/fondations",            "destination": "/fr/fondations",           "permanent": true },
+    { "source": "/fondations.html",       "destination": "/fr/fondations",           "permanent": true },
+    { "source": "/a-propos",              "destination": "/fr/a-propos",             "permanent": true },
+    { "source": "/a-propos.html",         "destination": "/fr/a-propos",             "permanent": true },
+    { "source": "/faq",                   "destination": "/fr/faq",                  "permanent": true },
+    { "source": "/faq.html",              "destination": "/fr/faq",                  "permanent": true },
+    { "source": "/contact",               "destination": "/fr/contact",              "permanent": true },
+    { "source": "/contact.html",          "destination": "/fr/contact",              "permanent": true },
+    { "source": "/reserver-appel",        "destination": "/fr/reserver-appel",       "permanent": true },
+    { "source": "/reserver-appel.html",   "destination": "/fr/reserver-appel",       "permanent": true }
+  ]
+}

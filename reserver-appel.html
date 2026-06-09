@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Réserver un appel — Kemora Agency</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black:    #050505;
+    --black2:   #0a0a0a;
+    --black3:   #111111;
+    --glass:    rgba(255,255,255,0.03);
+    --gold:     #C6A16E;
+    --gold-dim: #8a6e49;
+    --white:    #f5f0e8;
+    --muted:    rgba(245,240,232,0.45);
+    --border:   rgba(198,161,110,0.18);
+    --border2:  rgba(198,161,110,0.08);
+    --serif:    'Cormorant Garamond', Georgia, serif;
+    --sans:     'Jost', sans-serif;
+    --ease:     cubic-bezier(0.25,0.46,0.45,0.94);
+    --glow:     0 0 40px rgba(198,161,110,0.08);
+  }
+
+  html { scroll-behavior: smooth; }
+  body { background: var(--black); color: var(--white); font-family: var(--sans); font-weight: 300; line-height: 1.7; overflow-x: hidden; -webkit-font-smoothing: antialiased; min-height: 100vh; display: flex; flex-direction: column; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; opacity: 0.5; }
+
+  h1, h2, h3 { font-family: var(--serif); font-weight: 400; }
+  h1 { font-size: clamp(2.6rem, 6vw, 4.5rem); line-height: 1.08; letter-spacing: -0.02em; }
+  p  { font-size: clamp(0.9rem, 1.4vw, 1.02rem); }
+
+  .label { font-family: var(--sans); font-size: 0.68rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); }
+  .gold { color: var(--gold); }
+  .italic { font-style: italic; }
+  .muted { color: var(--muted); }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 clamp(1.5rem,5vw,4rem); width: 100%; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.4rem clamp(1.5rem,5vw,4rem); display: flex; align-items: center; justify-content: space-between; background: rgba(5,5,5,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border2); transition: all 0.3s; }
+  .nav-brand { font-family: var(--serif); font-size: 1.15rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--white); text-decoration: none; }
+  .nav-back { font-family: var(--sans); font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; transition: color 0.3s; }
+  .nav-back:hover { color: var(--gold); }
+  .nav-back svg { width: 14px; height: 14px; }
+
+  /* MAIN */
+  main { flex: 1; padding-top: 130px; padding-bottom: clamp(4rem,8vw,7rem); position: relative; overflow: hidden; }
+  .main-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 50% 50% at 70% 20%, rgba(198,161,110,0.05), transparent 70%); pointer-events: none; }
+
+  .contact-layout { position: relative; z-index: 1; display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 5rem; align-items: start; padding-top: clamp(2rem,5vw,4rem); }
+
+  /* Left intro */
+  .contact-intro { position: sticky; top: 120px; }
+  .contact-eyebrow { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+  .contact-eyebrow-line { width: 36px; height: 1px; background: var(--gold); }
+  .contact-intro h1 { margin-bottom: 1.5rem; }
+  .contact-intro h1 em { font-style: italic; color: var(--gold); }
+  .contact-intro p { color: var(--muted); line-height: 1.9; margin-bottom: 2.5rem; max-width: 380px; }
+  .contact-points { display: flex; flex-direction: column; gap: 1.3rem; padding-top: 2rem; border-top: 1px solid var(--border2); }
+  .contact-point { display: flex; gap: 1rem; align-items: flex-start; }
+  .contact-point-icon { width: 32px; height: 32px; flex-shrink: 0; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--gold); }
+  .contact-point-icon svg { width: 15px; height: 15px; }
+  .contact-point-text strong { display: block; font-size: 0.85rem; font-weight: 500; color: var(--white); margin-bottom: 0.2rem; letter-spacing: 0.02em; }
+  .contact-point-text span { font-size: 0.8rem; color: var(--muted); }
+
+  /* Form */
+  .form-wrap { background: var(--black2); border: 1px solid var(--border2); padding: clamp(2rem,4vw,3.5rem); position: relative; overflow: hidden; }
+  .form-wrap::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(to right, transparent, var(--gold), transparent); }
+
+  .field { margin-bottom: 1.6rem; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+  .field label { display: block; font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.7rem; }
+  .field label .req { color: var(--gold-dim); }
+  .field input, .field textarea, .field select {
+    width: 100%; background: var(--black); border: 1px solid var(--border2);
+    color: var(--white); font-family: var(--sans); font-size: 0.92rem; font-weight: 300;
+    padding: 0.9rem 1.1rem; transition: border-color 0.3s, box-shadow 0.3s; outline: none;
+  }
+  .field input::placeholder, .field textarea::placeholder { color: rgba(245,240,232,0.25); }
+  .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--gold); box-shadow: 0 0 0 1px rgba(198,161,110,0.2); }
+  .field textarea { resize: vertical; min-height: 110px; line-height: 1.7; }
+  .field select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23C6A16E' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1.1rem center; padding-right: 2.5rem; }
+  .field select option { background: var(--black); color: var(--white); }
+  .field-hint { font-size: 0.72rem; color: var(--muted); margin-top: 0.5rem; font-style: italic; }
+
+  /* RGPD checkbox */
+  .field-check { display: flex; gap: 0.9rem; align-items: flex-start; margin-bottom: 2rem; cursor: pointer; }
+  .field-check input { position: absolute; opacity: 0; width: 0; height: 0; }
+  .check-box { width: 20px; height: 20px; flex-shrink: 0; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; transition: all 0.25s; margin-top: 2px; }
+  .check-box svg { width: 12px; height: 12px; color: var(--black); opacity: 0; transition: opacity 0.2s; }
+  .field-check input:checked + .check-box { background: var(--gold); border-color: var(--gold); }
+  .field-check input:checked + .check-box svg { opacity: 1; }
+  .field-check input:focus + .check-box { box-shadow: 0 0 0 2px rgba(198,161,110,0.25); }
+  .check-label { font-size: 0.78rem; color: var(--muted); line-height: 1.6; }
+
+  .btn-submit { width: 100%; background: var(--gold); color: var(--black); font-family: var(--sans); font-size: 0.8rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; padding: 1.15rem 2rem; border: none; cursor: pointer; transition: all 0.3s var(--ease); position: relative; overflow: hidden; }
+  .btn-submit::after { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.12); opacity: 0; transition: opacity 0.3s; }
+  .btn-submit:hover::after { opacity: 1; }
+  .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(198,161,110,0.3); }
+  .form-note { text-align: center; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.04em; margin-top: 1.2rem; }
+
+  /* Success message */
+  .form-success { display: none; text-align: center; padding: 2rem 0; }
+  .form-success.show { display: block; }
+  .form-success-icon { width: 56px; height: 56px; border: 1px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gold); margin: 0 auto 1.5rem; }
+  .form-success h3 { font-family: var(--serif); font-size: 1.6rem; margin-bottom: 0.8rem; color: var(--white); }
+  .form-success p { font-size: 0.9rem; color: var(--muted); }
+
+  /* FOOTER */
+  footer { padding: 3rem clamp(1.5rem,5vw,4rem); border-top: 1px solid var(--border2); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
+  .footer-brand { font-family: var(--serif); font-size: 0.95rem; letter-spacing: 0.12em; text-transform: uppercase; }
+  .footer-links { display: flex; gap: 2rem; flex-wrap: wrap; }
+  .footer-links a { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.3s; }
+  .footer-links a:hover { color: var(--gold); }
+  .footer-copy { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.06em; width: 100%; border-top: 1px solid var(--border2); padding-top: 1.5rem; margin-top: 0.5rem; }
+
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+
+  @media (max-width: 900px) {
+    .contact-layout { grid-template-columns: 1fr; gap: 3rem; }
+    .contact-intro { position: static; }
+    .field-row { grid-template-columns: 1fr; gap: 0; }
+    .field-row .field { margin-bottom: 1.6rem; }
+    footer { flex-direction: column; text-align: center; }
+    .footer-links { justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-brand">Kemora Agency</a>
+  <a href="index.html" class="nav-back">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 12L6 8l4-4"/></svg>
+    Retour à l'accueil
+  </a>
+</nav>
+
+<!-- MAIN -->
+<main>
+  <div class="main-bg"></div>
+  <div class="container">
+    <div class="contact-layout">
+
+      <!-- Intro -->
+      <div class="contact-intro">
+        <div class="contact-eyebrow reveal">
+          <div class="contact-eyebrow-line"></div>
+          <span class="label">Réserver un appel</span>
+        </div>
+        <h1 class="reveal reveal-delay-1">Échangeons<br>de vive <em>voix</em></h1>
+        <p class="reveal reveal-delay-2">Certaines décisions méritent simplement d'être éclaircies avant d'être prises. Réservez un créneau et discutons de votre situation, de vos objectifs et de la ressource qui vous correspond le mieux.</p>
+
+        <div class="contact-points reveal reveal-delay-2">
+          <div class="contact-point">
+            <div class="contact-point-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg>
+            </div>
+            <div class="contact-point-text">
+              <strong>Un échange personnalisé</strong>
+              <span>Nous parlons de votre situation précise, pas de généralités.</span>
+            </div>
+          </div>
+          <div class="contact-point">
+            <div class="contact-point-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            </div>
+            <div class="contact-point-text">
+              <strong>Sans engagement</strong>
+              <span>L'appel sert à y voir clair, en toute transparence.</span>
+            </div>
+          </div>
+          <div class="contact-point">
+            <div class="contact-point-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
+            </div>
+            <div class="contact-point-text">
+              <strong>Vous préférez écrire ?</strong>
+              <span>Vous pouvez aussi passer par le <a href="contact.html" style="color:var(--gold); text-decoration:none;">formulaire de contact</a>.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="form-wrap reveal reveal-delay-1">
+        <!--
+          ════════════════════════════════════════════════════════════
+          ZONE FORMULAIRE — À CONNECTER AU DÉPLOIEMENT
+          ────────────────────────────────────────────────────────────
+          Pour relier ce formulaire à Systeme.io :
+          remplacer l'attribut action="..." ci-dessous par l'URL
+          de votre formulaire Systeme.io. La structure des champs est prête.
+          (En attendant, le formulaire affiche un message de confirmation.)
+          ════════════════════════════════════════════════════════════
+        -->
+        <form id="callForm" action="#" method="POST" onsubmit="return handleSubmit(event)">
+          <div class="field-row">
+            <div class="field">
+              <label for="prenom">Prénom <span class="req">*</span></label>
+              <input type="text" id="prenom" name="prenom" placeholder="Votre prénom" required>
+            </div>
+            <div class="field">
+              <label for="nom">Nom <span class="req">*</span></label>
+              <input type="text" id="nom" name="nom" placeholder="Votre nom" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="telephone">Numéro de téléphone <span class="req">*</span></label>
+            <input type="tel" id="telephone" name="telephone" placeholder="06 00 00 00 00" required>
+          </div>
+
+          <div class="field">
+            <label for="objectif">Objectif de l'appel <span class="req">*</span></label>
+            <select id="objectif" name="objectif" required>
+              <option value="" disabled selected>Sélectionnez un objectif</option>
+              <option value="orientation">Être orienté vers la bonne ressource</option>
+              <option value="formations">En savoir plus sur les formations</option>
+              <option value="accompagnement">Accompagnement &amp; conseil stratégique</option>
+              <option value="automatisation">Automatiser mon activité</option>
+              <option value="autre">Autre objectif</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="creneaux">Mes créneaux de disponibilité <span class="req">*</span></label>
+            <textarea id="creneaux" name="creneaux" placeholder="Indiquez les jours et heures où vous êtes joignable…" required></textarea>
+          </div>
+
+          <label class="field-check">
+            <input type="checkbox" id="rgpd" name="rgpd" required>
+            <span class="check-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>
+            </span>
+            <span class="check-label">J'accepte que mes données personnelles soient collectées et utilisées par Kemora Agency dans le seul but de me recontacter pour organiser cet appel.</span>
+          </label>
+
+          <button type="submit" class="btn-submit">Demander mon appel</button>
+          <p class="form-note">Nous vous recontacterons pour confirmer le créneau qui vous convient.</p>
+        </form>
+
+        <!-- Message de confirmation -->
+        <div class="form-success" id="formSuccess">
+          <div class="form-success-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12l5 5L20 7"/></svg>
+          </div>
+          <h3>Demande envoyée</h3>
+          <p>Merci ! Nous reviendrons vers vous très vite pour confirmer le créneau de votre appel.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Kemora Agency</div>
+  <div class="footer-links">
+    <a href="#">Mentions légales</a>
+    <a href="#">Politique de confidentialité</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <div class="footer-copy">© 2026 Kemora Agency — Tous droits réservés</div>
+</footer>
+
+<script>
+  function handleSubmit(e) {
+    e.preventDefault();
+    // ── Au déploiement : ici se fera l'envoi réel vers Systeme.io ──
+    document.getElementById('callForm').style.display = 'none';
+    document.getElementById('formSuccess').classList.add('show');
+    return false;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('visible'); observer.unobserve(en.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  window.addEventListener('scroll', () => {
+    document.querySelector('nav').style.borderBottomColor = window.scrollY > 50 ? 'rgba(198,161,110,0.15)' : 'rgba(198,161,110,0.06)';
+  });
+</script>
+</body>
+</html>

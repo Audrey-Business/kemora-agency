@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>À propos — Kemora Agency</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black:    #050505;
+    --black2:   #0a0a0a;
+    --black3:   #111111;
+    --glass:    rgba(255,255,255,0.03);
+    --gold:     #C6A16E;
+    --gold-dim: #8a6e49;
+    --white:    #f5f0e8;
+    --muted:    rgba(245,240,232,0.45);
+    --border:   rgba(198,161,110,0.18);
+    --border2:  rgba(198,161,110,0.08);
+    --serif:    'Cormorant Garamond', Georgia, serif;
+    --sans:     'Jost', sans-serif;
+    --ease:     cubic-bezier(0.25,0.46,0.45,0.94);
+    --glow:     0 0 40px rgba(198,161,110,0.08);
+  }
+
+  html { scroll-behavior: smooth; }
+  body { background: var(--black); color: var(--white); font-family: var(--sans); font-weight: 300; line-height: 1.7; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; opacity: 0.5; }
+
+  h1, h2, h3 { font-family: var(--serif); font-weight: 400; }
+  h1 { font-size: clamp(2.8rem, 7vw, 5rem); line-height: 1.08; letter-spacing: -0.02em; }
+  h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); line-height: 1.14; letter-spacing: -0.01em; }
+  p  { font-size: clamp(0.9rem, 1.4vw, 1.02rem); }
+
+  .label { font-family: var(--sans); font-size: 0.68rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); }
+  .gold { color: var(--gold); }
+  .italic { font-style: italic; }
+  .muted { color: var(--muted); }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 clamp(1.5rem,5vw,4rem); }
+  .section { padding: clamp(4.5rem,9vw,8rem) 0; }
+  .divider-h { height: 1px; background: linear-gradient(to right, transparent, var(--border), transparent); }
+
+  .btn-gold { display: inline-flex; align-items: center; gap: 0.6rem; background: var(--gold); color: var(--black); font-family: var(--sans); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; padding: 1rem 2.4rem; border: none; cursor: pointer; text-decoration: none; transition: all 0.3s var(--ease); position: relative; overflow: hidden; }
+  .btn-gold::after { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.12); opacity: 0; transition: opacity 0.3s; }
+  .btn-gold:hover::after { opacity: 1; }
+  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(198,161,110,0.3); }
+  .btn-outline { display: inline-flex; align-items: center; gap: 0.6rem; background: transparent; color: var(--gold); font-family: var(--sans); font-size: 0.78rem; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; padding: 0.95rem 2.2rem; border: 1px solid var(--border); cursor: pointer; text-decoration: none; transition: all 0.3s var(--ease); }
+  .btn-outline:hover { border-color: var(--gold); background: rgba(198,161,110,0.06); }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.4rem clamp(1.5rem,5vw,4rem); display: flex; align-items: center; justify-content: space-between; background: rgba(5,5,5,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border2); transition: all 0.3s; }
+  .nav-brand { font-family: var(--serif); font-size: 1.15rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--white); text-decoration: none; }
+  .nav-back { font-family: var(--sans); font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; transition: color 0.3s; }
+  .nav-back:hover { color: var(--gold); }
+  .nav-back svg { width: 14px; height: 14px; }
+
+  /* HERO with image */
+  #hero { position: relative; min-height: 90vh; display: flex; align-items: flex-end; padding-bottom: clamp(3rem,7vw,6rem); padding-top: 130px; overflow: hidden; }
+  .hero-img { position: absolute; inset: 0; z-index: 0; }
+  .hero-img img { width: 100%; height: 100%; object-fit: cover; }
+  .hero-img::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, var(--black) 8%, rgba(5,5,5,0.6) 45%, rgba(5,5,5,0.35) 100%); }
+  .hero-img::before { content: ''; position: absolute; inset: 0; z-index: 1; background: linear-gradient(to right, rgba(5,5,5,0.7) 0%, transparent 60%); }
+  .hero-content { position: relative; z-index: 2; max-width: 720px; }
+  .hero-eyebrow { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+  .hero-eyebrow-line { width: 36px; height: 1px; background: var(--gold); }
+  .hero-content h1 { margin-bottom: 1.5rem; }
+  .hero-content h1 em { font-style: italic; color: var(--gold); }
+  .hero-tagline { color: var(--white); font-size: clamp(1rem,1.6vw,1.15rem); max-width: 560px; line-height: 1.8; opacity: 0.85; }
+
+  /* INTRO / MISSION */
+  #mission { position: relative; }
+  .mission-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 5rem; align-items: start; }
+  .mission-left { position: sticky; top: 110px; }
+  .mission-left .label { display: block; margin-bottom: 1.5rem; }
+  .mission-left h2 em { font-style: italic; color: var(--gold); }
+  .mission-left .quote { margin-top: 2rem; font-family: var(--serif); font-style: italic; font-size: 1.3rem; line-height: 1.5; color: var(--gold); }
+  .mission-right p { color: var(--muted); margin-bottom: 1.5rem; line-height: 1.9; }
+  .mission-right p:first-child { color: var(--white); font-size: clamp(1rem,1.6vw,1.15rem); }
+  .mission-right strong { color: var(--white); font-weight: 400; }
+
+  /* PLATFORM / ce que permet le site */
+  #platform { background: var(--black2); }
+  .platform-header { text-align: center; margin-bottom: 4rem; max-width: 640px; margin-left: auto; margin-right: auto; }
+  .platform-header h2 { margin: 1rem 0 1.2rem; }
+  .platform-header h2 em { font-style: italic; color: var(--gold); }
+  .platform-header p { color: var(--muted); }
+  .platform-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 1px; border: 1px solid var(--border2); }
+  .platform-item { padding: 2.5rem; background: var(--black); transition: background 0.3s; position: relative; overflow: hidden; }
+  .platform-item:hover { background: rgba(198,161,110,0.02); }
+  .platform-num { font-family: var(--serif); font-size: 2.4rem; font-weight: 300; color: rgba(198,161,110,0.12); line-height: 1; margin-bottom: 1rem; display: block; }
+  .platform-item h3 { font-size: 1.15rem; margin-bottom: 0.6rem; color: var(--white); }
+  .platform-item p { font-size: 0.85rem; color: var(--muted); line-height: 1.7; }
+
+  /* APPROACH / résultats */
+  #approach { position: relative; overflow: hidden; }
+  .approach-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(198,161,110,0.04), transparent); }
+  .approach-inner { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; text-align: center; }
+  .approach-inner h2 { margin: 1rem 0 2rem; }
+  .approach-inner h2 em { font-style: italic; color: var(--gold); }
+  .approach-inner p { color: var(--muted); line-height: 1.9; font-size: clamp(0.95rem,1.5vw,1.08rem); }
+
+  /* VISION */
+  #vision { background: var(--black2); text-align: center; }
+  .vision-inner { max-width: 760px; margin: 0 auto; }
+  .vision-mark { font-family: var(--serif); font-size: 4rem; color: rgba(198,161,110,0.15); line-height: 1; margin-bottom: 1rem; }
+  .vision-inner .label { display: block; margin-bottom: 2rem; }
+  .vision-statement { font-family: var(--serif); font-size: clamp(1.6rem,3.5vw,2.6rem); font-weight: 300; line-height: 1.4; color: var(--white); }
+  .vision-statement em { font-style: italic; color: var(--gold); }
+
+  /* CTA */
+  #cta { text-align: center; padding: clamp(5rem,10vw,8rem) 0; position: relative; overflow: hidden; }
+  .cta-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 70% at 50% 50%, rgba(198,161,110,0.05), transparent); }
+  .cta-inner { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
+  .cta-inner h2 { margin: 1rem 0 1.5rem; }
+  .cta-inner h2 em { font-style: italic; color: var(--gold); }
+  .cta-inner p { color: var(--muted); margin-bottom: 2.5rem; line-height: 1.9; }
+  .cta-buttons { display: flex; gap: 1.2rem; justify-content: center; flex-wrap: wrap; }
+
+  /* FOOTER */
+  footer { padding: 3rem clamp(1.5rem,5vw,4rem); border-top: 1px solid var(--border2); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
+  .footer-brand { font-family: var(--serif); font-size: 0.95rem; letter-spacing: 0.12em; text-transform: uppercase; }
+  .footer-links { display: flex; gap: 2rem; flex-wrap: wrap; }
+  .footer-links a { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.3s; }
+  .footer-links a:hover { color: var(--gold); }
+  .footer-copy { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.06em; width: 100%; border-top: 1px solid var(--border2); padding-top: 1.5rem; margin-top: 0.5rem; }
+
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  @media (max-width: 900px) {
+    .mission-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .mission-left { position: static; }
+    footer { flex-direction: column; text-align: center; }
+    .footer-links { justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-brand">Kemora Agency</a>
+  <a href="index.html" class="nav-back">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 12L6 8l4-4"/></svg>
+    Retour à l'accueil
+  </a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-img">
+    <img src="assets/images/apropos.webp" alt="Espace premium Kemora Agency avec vue sur la ville la nuit">
+  </div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-eyebrow reveal">
+        <div class="hero-eyebrow-line"></div>
+        <span class="label">À propos</span>
+      </div>
+      <h1 class="reveal reveal-delay-1">Un écosystème<br>digital <em>premium</em></h1>
+      <p class="hero-tagline reveal reveal-delay-2">Dédié à l'intelligence artificielle, à l'automatisation et à la création de systèmes de croissance intelligents.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MISSION -->
+<section id="mission" class="section">
+  <div class="container">
+    <div class="mission-grid">
+      <div class="mission-left">
+        <span class="label reveal">Notre mission</span>
+        <h2 class="reveal reveal-delay-1">L'IA comme<br>levier de <em>performance</em></h2>
+        <div class="quote reveal reveal-delay-2">« Transformer la technologie en véritable levier de croissance. »</div>
+      </div>
+      <div class="mission-right">
+        <p class="reveal">Notre mission est d'aider les entrepreneurs, créateurs et business en ligne à exploiter pleinement le potentiel de l'IA afin de gagner du temps, optimiser leur productivité et développer des revenus plus durables grâce à des stratégies modernes et automatisées.</p>
+        <p class="reveal reveal-delay-1">À travers des formations, des ressources exclusives, des outils concrets et des systèmes prêts à l'emploi, Kemora Agency simplifie l'accès aux technologies d'intelligence artificielle et les transforme en <strong>véritables leviers de performance</strong>.</p>
+        <p class="reveal reveal-delay-2">Kemora Agency ne se limite pas à l'apprentissage théorique. L'objectif est de construire un véritable environnement orienté résultats, où chaque ressource, chaque système et chaque stratégie est pensée pour générer un <strong>impact concret et durable</strong>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLATFORM -->
+<section id="platform" class="section">
+  <div class="container">
+    <div class="platform-header">
+      <span class="label reveal">La plateforme</span>
+      <h2 class="reveal reveal-delay-1">Un espace pensé<br>pour <em>avancer</em></h2>
+      <p class="reveal reveal-delay-2">Le site a été conçu comme un environnement complet, où chaque ressource te rapproche d'un business plus intelligent et plus autonome.</p>
+    </div>
+    <div class="platform-grid">
+      <div class="platform-item reveal">
+        <span class="platform-num">01</span>
+        <h3>Des formations premium</h3>
+        <p>Découvrir des formations exigeantes autour de l'IA et de l'automatisation.</p>
+      </div>
+      <div class="platform-item reveal reveal-delay-1">
+        <span class="platform-num">02</span>
+        <h3>Des ressources stratégiques</h3>
+        <p>Accéder à des ressources stratégiques et des outils innovants prêts à l'emploi.</p>
+      </div>
+      <div class="platform-item reveal reveal-delay-2">
+        <span class="platform-num">03</span>
+        <h3>Automatiser son activité</h3>
+        <p>Apprendre à automatiser son activité et ses processus pour libérer du temps.</p>
+      </div>
+      <div class="platform-item reveal">
+        <span class="platform-num">04</span>
+        <h3>Un business scalable</h3>
+        <p>Développer un business digital capable de grandir sans dépendre de ton temps.</p>
+      </div>
+      <div class="platform-item reveal reveal-delay-1">
+        <span class="platform-num">05</span>
+        <h3>Une stratégie moderne</h3>
+        <p>Intégrer l'intelligence artificielle dans une stratégie de croissance durable.</p>
+      </div>
+      <div class="platform-item reveal reveal-delay-2">
+        <span class="platform-num">+</span>
+        <h3>Un impact concret</h3>
+        <p>Chaque système est pensé pour produire des résultats réels, pas seulement de la théorie.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APPROACH -->
+<section id="approach" class="section">
+  <div class="approach-bg"></div>
+  <div class="container">
+    <div class="approach-inner">
+      <span class="label reveal">L'esprit Kemora</span>
+      <h2 class="reveal reveal-delay-1">Un environnement<br>orienté <em>résultats</em></h2>
+      <p class="reveal reveal-delay-2">Kemora Agency simplifie l'accès aux technologies d'intelligence artificielle et les transforme en leviers de performance. Ici, l'objectif n'est pas d'accumuler des connaissances — c'est de construire un environnement où chaque ressource, chaque système et chaque stratégie génère un impact concret et durable.</p>
+    </div>
+  </div>
+</section>
+
+<!-- VISION -->
+<section id="vision" class="section">
+  <div class="container">
+    <div class="vision-inner">
+      <div class="vision-mark reveal">“</div>
+      <span class="label reveal">Notre vision</span>
+      <div class="vision-statement reveal reveal-delay-1">Permettre à une nouvelle génération d'entrepreneurs de bâtir des entreprises plus <em>intelligentes</em>, plus <em>automatisées</em> et plus <em>indépendantes</em> grâce à la puissance de l'intelligence artificielle.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-bg"></div>
+  <div class="container">
+    <div class="cta-inner">
+      <span class="label reveal">Passer à l'action</span>
+      <h2 class="reveal reveal-delay-1">Prêt à construire<br>ton <em>système</em> ?</h2>
+      <p class="reveal reveal-delay-2">Découvre nos formations et ressources, ou échange directement avec nous pour identifier ce qui correspond le mieux à tes objectifs.</p>
+      <div class="cta-buttons reveal reveal-delay-3">
+        <a href="index.html#offre" class="btn-gold">Découvrir notre offre</a>
+        <a href="reserver-appel.html" class="btn-outline">Réserver un appel</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Kemora Agency</div>
+  <div class="footer-links">
+    <a href="#">Mentions légales</a>
+    <a href="#">Politique de confidentialité</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <div class="footer-copy">© 2026 Kemora Agency — Tous droits réservés</div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  window.addEventListener('scroll', () => {
+    document.querySelector('nav').style.borderBottomColor = window.scrollY > 50 ? 'rgba(198,161,110,0.15)' : 'rgba(198,161,110,0.06)';
+  });
+</script>
+</body>
+</html>

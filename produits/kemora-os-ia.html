@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kemora OS IA — Kemora Agency</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black:    #050505;
+    --black2:   #0a0a0a;
+    --black3:   #111111;
+    --glass:    rgba(255,255,255,0.03);
+    --gold:     #C6A16E;
+    --gold-dim: #8a6e49;
+    --white:    #f5f0e8;
+    --muted:    rgba(245,240,232,0.45);
+    --border:   rgba(198,161,110,0.18);
+    --border2:  rgba(198,161,110,0.08);
+    --serif:    'Cormorant Garamond', Georgia, serif;
+    --sans:     'Jost', sans-serif;
+    --ease:     cubic-bezier(0.25,0.46,0.45,0.94);
+    --glow:     0 0 40px rgba(198,161,110,0.08);
+  }
+
+  html { scroll-behavior: smooth; }
+  body { background: var(--black); color: var(--white); font-family: var(--sans); font-weight: 300; line-height: 1.7; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; opacity: 0.5; }
+
+  h1, h2, h3 { font-family: var(--serif); font-weight: 400; }
+  h1 { font-size: clamp(2.8rem, 7vw, 5.5rem); line-height: 1.08; letter-spacing: -0.02em; color: var(--white); }
+  h2 { font-size: clamp(2rem, 4.5vw, 3.4rem); line-height: 1.12; letter-spacing: -0.01em; color: var(--white); }
+  h1 em, h2 em { font-style: italic; color: var(--gold); }
+  h2 { font-size: clamp(2rem, 4.5vw, 3.4rem); line-height: 1.12; letter-spacing: -0.01em; }
+  p  { font-size: clamp(0.88rem, 1.4vw, 1rem); }
+
+  .label { font-family: var(--sans); font-size: 0.68rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); }
+  .gold { color: var(--gold); }
+  .italic { font-style: italic; }
+  .muted { color: var(--muted); }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 clamp(1.5rem,5vw,4rem); }
+  .section { padding: clamp(5rem,10vw,9rem) 0; }
+  .divider-h { height: 1px; background: linear-gradient(to right, transparent, var(--border), transparent); }
+
+  .btn-gold { display: inline-flex; align-items: center; gap: 0.6rem; background: var(--gold); color: var(--black); font-family: var(--sans); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; padding: 1rem 2.4rem; border: none; cursor: pointer; text-decoration: none; transition: all 0.3s var(--ease); position: relative; overflow: hidden; }
+  .btn-gold::after { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.12); opacity: 0; transition: opacity 0.3s; }
+  .btn-gold:hover::after { opacity: 1; }
+  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(198,161,110,0.3); }
+  .btn-outline { display: inline-flex; align-items: center; gap: 0.6rem; background: transparent; color: var(--gold); font-family: var(--sans); font-size: 0.78rem; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; padding: 0.95rem 2.2rem; border: 1px solid var(--border); cursor: pointer; text-decoration: none; transition: all 0.3s var(--ease); }
+  .btn-outline:hover { border-color: var(--gold); background: rgba(198,161,110,0.06); }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.4rem clamp(1.5rem,5vw,4rem); display: flex; align-items: center; justify-content: space-between; background: rgba(5,5,5,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border2); transition: all 0.3s; }
+  .nav-brand { font-family: var(--serif); font-size: 1.15rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--white); text-decoration: none; }
+  .nav-back { font-family: var(--sans); font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; transition: color 0.3s; }
+  .nav-back:hover { color: var(--gold); }
+  .nav-back svg { width: 14px; height: 14px; }
+
+  /* HERO */
+  #hero { padding-top: 130px; min-height: 100vh; display: flex; align-items: center; position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 70% 40%, rgba(198,161,110,0.07) 0%, transparent 70%), radial-gradient(ellipse 40% 40% at 20% 80%, rgba(198,161,110,0.03) 0%, transparent 60%); }
+  .hero-grid-lines { position: absolute; inset: 0; background-image: linear-gradient(rgba(198,161,110,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(198,161,110,0.03) 1px, transparent 1px); background-size: 80px 80px; pointer-events: none; }
+  .hero-inner { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+  .hero-eyebrow { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+  .hero-eyebrow-line { width: 36px; height: 1px; background: var(--gold); }
+  .hero-level { display: inline-flex; align-items: center; gap: 0.5rem; border: 1px solid var(--border); padding: 0.3rem 0.8rem; margin-bottom: 1.5rem; }
+  .hero-level span { font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); }
+  .hero-title { margin-bottom: 1.6rem; }
+  .hero-title em { font-style: italic; color: var(--gold); }
+  .hero-subtitle { color: var(--muted); font-size: clamp(0.9rem,1.5vw,1.05rem); margin-bottom: 2.8rem; max-width: 480px; line-height: 1.9; }
+  .hero-cta { display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; }
+  .hero-price-note { font-size: 0.72rem; letter-spacing: 0.1em; color: var(--muted); margin-top: 1.2rem; }
+
+  /* Hero visual — OS dashboard */
+  .hero-visual { position: relative; display: flex; align-items: center; justify-content: center; }
+  .os-mockup { width: 100%; max-width: 460px; position: relative; }
+  .os-frame { background: var(--black2); border: 1px solid var(--border); padding: 0; overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,0.7), var(--glow); animation: float 7s ease-in-out infinite; }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  .os-topbar { background: var(--black3); border-bottom: 1px solid var(--border2); padding: 0.8rem 1.2rem; display: flex; align-items: center; justify-content: space-between; }
+  .os-dots { display: flex; gap: 0.4rem; }
+  .os-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
+  .os-dot:first-child { background: rgba(198,161,110,0.4); }
+  .os-title-bar { font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); }
+  .os-body { padding: 1.5rem; }
+  .os-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-bottom: 0.8rem; }
+  .os-card { background: rgba(198,161,110,0.04); border: 1px solid var(--border2); padding: 1rem; transition: border-color 0.3s; }
+  .os-card:hover { border-color: var(--border); }
+  .os-card-label { font-size: 0.58rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.4rem; display: block; }
+  .os-card-val { font-family: var(--serif); font-size: 1.3rem; color: var(--white); line-height: 1; }
+  .os-card-sub { font-size: 0.65rem; color: var(--muted); margin-top: 0.2rem; }
+  .os-bar-row { margin-bottom: 0.8rem; }
+  .os-bar-label { display: flex; justify-content: space-between; margin-bottom: 0.3rem; }
+  .os-bar-label span { font-size: 0.65rem; color: var(--muted); }
+  .os-bar-label strong { font-size: 0.65rem; color: var(--gold); font-weight: 400; }
+  .os-bar { height: 3px; background: var(--border2); }
+  .os-bar-fill { height: 100%; background: linear-gradient(to right, var(--gold-dim), var(--gold)); }
+  .os-workflow { margin-top: 0.8rem; display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+  .os-wf-step { background: rgba(198,161,110,0.06); border: 1px solid var(--border2); padding: 0.3rem 0.6rem; font-size: 0.6rem; letter-spacing: 0.08em; color: var(--muted); }
+  .os-wf-arrow { color: var(--gold); font-size: 0.7rem; }
+  .os-terminal { display: flex; flex-direction: column; gap: 0.6rem; padding: 0.4rem 0; font-family: 'Courier New', monospace; }
+  .os-terminal-line { font-size: 0.72rem; display: flex; align-items: baseline; gap: 0.6rem; opacity: 0; animation: termFade 0.4s var(--ease) forwards; }
+  .os-term-delay-1 { animation-delay: 0.4s; }
+  .os-term-delay-2 { animation-delay: 0.8s; }
+  .os-term-delay-3 { animation-delay: 1.2s; }
+  .os-term-delay-4 { animation-delay: 1.6s; }
+  .os-term-delay-5 { animation-delay: 2s; }
+  @keyframes termFade { from { opacity: 0; transform: translateX(-4px); } to { opacity: 1; transform: translateX(0); } }
+  .os-term-prompt { color: var(--gold); font-weight: 700; }
+  .os-term-ok { color: #4ade80; font-size: 0.65rem; letter-spacing: 0.04em; }
+  .os-term-warn { color: var(--gold-dim); font-size: 0.65rem; }
+  .os-term-muted { color: var(--muted); }
+  .os-term-gold { color: var(--gold); font-style: italic; }
+  .os-term-cursor { display: inline-block; animation: blink 1s step-end infinite; }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+
+  /* Constellation */
+  .os-constellation { display: flex; align-items: center; justify-content: center; padding: 0.5rem 0; }
+  .os-svg { width: 100%; max-width: 300px; }
+  .os-core-pulse { animation: corePulse 3s ease-in-out infinite; }
+  @keyframes corePulse { 0%,100% { opacity: 1; r: 3; } 50% { opacity: 0.5; r: 5; } }
+  .os-node { animation: nodePulse 4s ease-in-out infinite; }
+  .os-node:nth-child(2) { animation-delay: 1s; }
+  .os-node:nth-child(3) { animation-delay: 2s; }
+  @keyframes nodePulse { 0%,100% { opacity: 0.9; } 50% { opacity: 0.4; } }
+  /* floating badge */
+  .os-badge { position: absolute; bottom: -15px; right: -20px; background: var(--black3); border: 1px solid var(--border); padding: 0.8rem 1.2rem; box-shadow: var(--glow); animation: float 9s ease-in-out infinite reverse; }
+  .os-badge-label { font-size: 0.58rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.2rem; }
+  .os-badge-val { font-family: var(--serif); font-size: 1.4rem; }
+
+  /* PROMISE BAR */
+  #promise { padding: 3rem 0; border-top: 1px solid var(--border2); border-bottom: 1px solid var(--border2); background: var(--black2); }
+  .promise-grid { display: grid; grid-template-columns: repeat(4,1fr); }
+  .promise-item { padding: 1.2rem 2rem; display: flex; align-items: flex-start; gap: 1rem; border-right: 1px solid var(--border2); }
+  .promise-item:last-child { border-right: none; }
+  .promise-icon { color: var(--gold); flex-shrink: 0; margin-top: 2px; }
+  .promise-text strong { display: block; font-size: 0.83rem; font-weight: 500; color: var(--white); margin-bottom: 0.15rem; }
+  .promise-text span { font-size: 0.75rem; color: var(--muted); }
+
+  /* PROBLEM */
+  #problem { position: relative; }
+  .problem-inner { display: grid; grid-template-columns: 1fr 1.2fr; gap: 6rem; align-items: center; }
+  .problem-quote { font-family: var(--serif); font-size: clamp(1.6rem,3vw,2.4rem); font-style: italic; font-weight: 300; line-height: 1.4; position: relative; }
+  .problem-quote::before { content: '"'; font-size: 8rem; color: rgba(198,161,110,0.1); position: absolute; top: -2rem; left: -2rem; font-family: var(--serif); line-height: 1; }
+  .problem-source { margin-top: 2rem; display: flex; align-items: center; gap: 1rem; }
+  .problem-source-line { width: 24px; height: 1px; background: var(--gold); }
+  .problem-source span { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); }
+  .problem-bullets { list-style: none; margin: 2rem 0; }
+  .problem-bullets li { display: flex; align-items: baseline; gap: 1rem; padding: 0.9rem 0; border-bottom: 1px solid var(--border2); font-size: 0.9rem; color: var(--muted); }
+  .problem-bullets li::before { content: '—'; color: var(--gold); flex-shrink: 0; }
+
+  /* TRANSFORMATION */
+  #transformation { background: var(--black2); }
+  .transfo-header { text-align: center; margin-bottom: 5rem; }
+  .transfo-header h2 { margin: 1rem 0 1.2rem; }
+  .transfo-header p { color: var(--muted); max-width: 540px; margin: 0 auto; }
+  .before-after { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1.5rem; align-items: stretch; }
+  .ba-col { padding: 2.5rem; border: 1px solid var(--border2); }
+  .ba-label { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1.5rem; display: block; }
+  .ba-col.before .ba-label { color: var(--gold-dim); }
+  .ba-col.after  .ba-label { color: var(--gold); }
+  .ba-col.after { border-color: var(--border); background: rgba(198,161,110,0.02); }
+  .ba-items { list-style: none; }
+  .ba-items li { display: flex; gap: 0.8rem; align-items: baseline; padding: 0.6rem 0; font-size: 0.88rem; color: var(--muted); border-bottom: 1px solid var(--border2); }
+  .ba-items li:last-child { border-bottom: none; }
+  .ba-col.after .ba-items li { color: var(--white); }
+  .ba-arrow { display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 1.5rem; opacity: 0.6; }
+
+  /* CONTENU */
+  #contenu {}
+  .contenu-header { margin-bottom: 4rem; }
+  .contenu-header h2 { margin: 1rem 0 1rem; }
+  .contenu-header p { color: var(--muted); max-width: 560px; }
+  .chapters-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; border: 1px solid var(--border2); margin-bottom: 3rem; }
+  .chapter-card { padding: 2.2rem; background: var(--black2); border-right: 1px solid var(--border2); border-bottom: 1px solid var(--border2); position: relative; overflow: hidden; transition: background 0.3s; }
+  .chapter-card:hover { background: rgba(198,161,110,0.02); }
+  .chapter-card:nth-child(even) { border-right: none; }
+  .chapter-num { font-family: var(--serif); font-size: 3.5rem; font-weight: 300; color: rgba(198,161,110,0.07); position: absolute; top: 0.8rem; right: 1.2rem; line-height: 1; }
+  .chapter-tag { font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.6rem; display: block; }
+  .chapter-title { font-family: var(--serif); font-size: 1.15rem; margin-bottom: 0.6rem; color: var(--white); line-height: 1.3; }
+  .chapter-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.7; }
+
+  /* Bonus stack */
+  .bonus-stack { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; border: 1px solid var(--border); margin-bottom: 1rem; }
+  .bonus-item { padding: 2rem 1.5rem; background: rgba(198,161,110,0.03); border-right: 1px solid var(--border2); position: relative; overflow: hidden; display: flex; flex-direction: column; }
+  .bonus-item:nth-child(3n) { border-right: none; }
+  .bonus-item:nth-child(5) { border-right: none; }
+  .bonus-item:nth-child(n+4) { border-top: 1px solid var(--border2); }
+  .bonus-item::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(to right, transparent, var(--gold), transparent); }
+  .bonus-item-icon { color: var(--gold); margin-bottom: 1rem; }
+  .bonus-item-title { font-family: var(--serif); font-size: 1.05rem; margin-bottom: 0; }
+  .bonus-item-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.6; }
+  .bonus-tag-top { display: inline-block; background: var(--gold); color: var(--black); font-size: 0.58rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; padding: 0.2rem 0.6rem; margin-bottom: 0.6rem; }
+
+  /* RESULTS */
+  #results { background: var(--black2); }
+  .results-header { text-align: center; margin-bottom: 4rem; }
+  .results-header h2 { margin: 1rem 0 1rem; }
+  .results-header p { color: var(--muted); max-width: 500px; margin: 0 auto; }
+  .case-study { border: 1px solid var(--border); padding: 3.5rem; position: relative; overflow: hidden; }
+  .case-study::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(to right, transparent, var(--gold), transparent); }
+  .case-study-tag { display: inline-block; border: 1px solid var(--border); padding: 0.3rem 0.8rem; font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); margin-bottom: 2rem; }
+  .case-study-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 4rem; align-items: start; }
+  .case-profile h3 { font-family: var(--serif); font-size: 1.4rem; margin-bottom: 0.5rem; }
+  .case-profile p { font-size: 0.8rem; color: var(--muted); line-height: 1.7; }
+  .case-profile-detail { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
+  .case-profile-detail span { font-size: 0.75rem; color: var(--muted); display: flex; align-items: center; gap: 0.5rem; }
+  .case-profile-detail span::before { content: '·'; color: var(--gold); }
+  .case-results { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; border: 1px solid var(--border2); }
+  .case-stat { padding: 2rem; background: var(--black); text-align: center; border-right: 1px solid var(--border2); }
+  .case-stat:last-child { border-right: none; }
+  .case-stat-num { font-family: var(--serif); font-size: 3rem; font-weight: 300; color: var(--gold); line-height: 1; display: block; }
+  .case-stat-label { font-size: 0.72rem; color: var(--muted); margin-top: 0.5rem; display: block; }
+  .case-quote { margin-top: 2.5rem; padding: 1.5rem 2rem; border-left: 2px solid var(--gold); background: rgba(198,161,110,0.03); font-family: var(--serif); font-style: italic; font-size: 1.05rem; color: var(--white); line-height: 1.7; }
+
+  /* TARGET */
+  #target {}
+  .target-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 5rem; align-items: start; }
+  .target-left h2 { margin: 1rem 0 2rem; }
+  .target-cards { display: flex; flex-direction: column; gap: 1px; }
+  .target-card { padding: 1.5rem 2rem; background: var(--glass); border: 1px solid var(--border2); display: flex; gap: 1.2rem; align-items: flex-start; transition: border-color 0.3s, background 0.3s; }
+  .target-card:hover { border-color: var(--border); background: rgba(198,161,110,0.02); }
+  .target-check { width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 0.7rem; }
+  .target-card-text strong { display: block; font-size: 0.88rem; font-weight: 500; color: var(--white); margin-bottom: 0.2rem; }
+  .target-card-text span { font-size: 0.78rem; color: var(--muted); }
+  .not-for { padding: 2rem; border: 1px solid var(--border2); margin-top: 1.5rem; }
+  .not-for-label { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 1rem; display: block; }
+  .not-for ul { list-style: none; }
+  .not-for ul li { font-size: 0.82rem; color: var(--muted); display: flex; gap: 0.8rem; align-items: baseline; padding: 0.5rem 0; border-bottom: 1px solid var(--border2); }
+  .not-for ul li::before { content: '×'; color: var(--gold-dim); }
+  .not-for ul li:last-child { border-bottom: none; }
+  .target-right { position: sticky; top: 100px; }
+
+  /* PRICING */
+  #pricing { position: relative; overflow: hidden; background: var(--black2); }
+  .pricing-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 80% at 50% 50%, rgba(198,161,110,0.04), transparent); }
+  .pricing-inner { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; text-align: center; }
+  .pricing-inner h2 { margin: 1rem 0 1.2rem; }
+  .pricing-inner .sub { color: var(--muted); margin-bottom: 3.5rem; }
+  .price-card { background: var(--black); border: 1px solid var(--border); padding: 4rem; position: relative; overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,0.5), var(--glow); }
+  .price-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(to right, transparent, var(--gold), transparent); }
+  .price-anchor { font-family: var(--serif); font-size: 1rem; color: var(--muted); text-decoration: line-through; margin-bottom: 0.4rem; display: block; }
+  .price-main { font-family: var(--serif); font-size: clamp(4rem,10vw,6.5rem); font-weight: 300; line-height: 1; color: var(--white); display: flex; align-items: flex-start; justify-content: center; }
+  .price-currency { font-size: clamp(1.4rem,3vw,2rem); margin-top: 0.6rem; margin-right: 0.3rem; color: var(--gold); }
+  .price-access { font-size: 0.78rem; letter-spacing: 0.1em; color: var(--muted); margin-top: 1rem; display: block; }
+  .price-divider { height: 1px; background: var(--border2); margin: 2.5rem 0; }
+  .price-includes { text-align: left; list-style: none; margin-bottom: 2.5rem; }
+  .price-includes li { display: flex; gap: 1rem; align-items: baseline; padding: 0.6rem 0; font-size: 0.88rem; color: var(--muted); border-bottom: 1px solid var(--border2); }
+  .price-includes li:last-child { border-bottom: none; }
+  .price-includes li span { color: var(--gold); flex-shrink: 0; }
+  .price-cta-wrap { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+  .price-secure { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.06em; display: flex; align-items: center; gap: 0.5rem; }
+
+  /* FAQ */
+  .faq-header { text-align: center; margin-bottom: 4rem; }
+  .faq-header h2 { margin: 1rem 0 1rem; }
+  .faq-header p { color: var(--muted); max-width: 480px; margin: 0 auto; }
+  .faq-list { max-width: 760px; margin: 0 auto; }
+  .faq-item { border-bottom: 1px solid var(--border2); }
+  .faq-q { width: 100%; background: transparent; border: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 1.6rem 0; gap: 1.5rem; text-align: left; font-family: var(--sans); font-size: 0.9rem; font-weight: 400; color: var(--white); letter-spacing: 0.02em; transition: color 0.3s; }
+  .faq-q:hover { color: var(--gold); }
+  .faq-icon { width: 20px; height: 20px; flex-shrink: 0; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 0.9rem; transition: transform 0.3s; }
+  .faq-item.open .faq-icon { transform: rotate(45deg); }
+  .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.4s var(--ease); font-size: 0.85rem; color: var(--muted); line-height: 1.9; padding-bottom: 0; }
+  .faq-item.open .faq-a { max-height: 300px; padding-bottom: 1.5rem; }
+
+  /* FINAL CTA */
+  #final-cta { text-align: center; padding: clamp(6rem,12vw,10rem) 0; position: relative; overflow: hidden; }
+  .final-cta-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 70% at 50% 50%, rgba(198,161,110,0.05), transparent); }
+  .final-cta-inner { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+  .final-cta-inner h2 { margin: 1rem 0 1.5rem; }
+  .final-cta-inner p { color: var(--muted); margin-bottom: 3rem; line-height: 1.9; }
+  .final-cta-price { font-family: var(--serif); font-size: 1.1rem; color: var(--gold); margin-bottom: 1.5rem; display: block; letter-spacing: 0.06em; }
+
+  footer { padding: 3rem clamp(1.5rem,5vw,4rem); border-top: 1px solid var(--border2); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
+  .footer-brand { font-family: var(--serif); font-size: 0.95rem; letter-spacing: 0.12em; text-transform: uppercase; }
+  .footer-links { display: flex; gap: 2rem; flex-wrap: wrap; }
+  .footer-links a { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.3s; }
+  .footer-links a:hover { color: var(--gold); }
+  .footer-copy { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.06em; width: 100%; border-top: 1px solid var(--border2); padding-top: 1.5rem; margin-top: 0.5rem; }
+
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  .glass-card { background: var(--glass); border: 1px solid var(--border2); backdrop-filter: blur(12px); padding: 2.5rem; transition: border-color 0.3s; }
+  .glass-card:hover { border-color: var(--border); }
+
+  @media (max-width: 900px) {
+    .hero-inner, .problem-inner, .target-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .hero-visual { display: none; }
+    .before-after { grid-template-columns: 1fr; }
+    .ba-arrow { transform: rotate(90deg); }
+    .chapters-grid { grid-template-columns: 1fr; }
+    .bonus-stack { grid-template-columns: 1fr 1fr; }
+    .bonus-item:nth-child(2) { border-right: none; }
+    .case-study-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .case-results { grid-template-columns: 1fr !important; }
+    .case-stat { border-right: none; border-bottom: 1px solid var(--border2); }
+    .promise-grid { grid-template-columns: 1fr 1fr; }
+    .promise-item:nth-child(2) { border-right: none; }
+    .target-right { position: static; }
+    .price-card { padding: 2.5rem 1.8rem; }
+    footer { flex-direction: column; text-align: center; }
+    .footer-links { justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-brand">Kemora Agency</a>
+  <a href="#" class="nav-back">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 12L6 8l4-4"/></svg>
+    Retour à l'offre
+  </a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-lines"></div>
+  <div class="container">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-eyebrow reveal">
+          <div class="hero-eyebrow-line"></div>
+          <span class="label">Kemora Agency — Formation</span>
+        </div>
+        <div class="hero-level reveal">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18h4v-8H3zm7 0h4V6h-4zm7 0h4V2h-4z"/></svg>
+          <span>Niveau Avancé</span>
+        </div>
+        <h1 class="hero-title reveal reveal-delay-1">
+          Kemora OS IA
+        </h1>
+        <p class="hero-subtitle reveal reveal-delay-2">
+          Construisez une machine à contenu, clients et revenus qui travaille même quand vous ne travaillez pas.
+        </p>
+        <div class="hero-cta reveal reveal-delay-3">
+          <a href="#pricing" class="btn-gold">Accéder à la formation</a>
+          <a href="#contenu" class="btn-outline">Voir le programme</a>
+        </div>
+        <p class="hero-price-note reveal reveal-delay-4">À vous. Maintenant.</p>
+      </div>
+
+      <!-- OS Dashboard mockup -->
+      <div class="hero-visual reveal reveal-delay-2">
+        <div class="os-mockup">
+          <div class="os-frame">
+            <div class="os-topbar">
+              <div class="os-dots">
+                <div class="os-dot"></div>
+                <div class="os-dot"></div>
+                <div class="os-dot"></div>
+              </div>
+              <div class="os-title-bar">Kemora OS IA — Dashboard</div>
+              <div style="width:40px;"></div>
+            </div>
+            <div class="os-body">
+              <div class="os-constellation">
+                <svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" class="os-svg">
+                  <!-- Orbites -->
+                  <circle cx="150" cy="110" r="80" fill="none" stroke="rgba(198,161,110,0.12)" stroke-width="1" stroke-dasharray="4 6"/>
+                  <circle cx="150" cy="110" r="55" fill="none" stroke="rgba(198,161,110,0.18)" stroke-width="1" stroke-dasharray="3 5"/>
+                  <circle cx="150" cy="110" r="30" fill="none" stroke="rgba(198,161,110,0.25)" stroke-width="1"/>
+                  <!-- Noyau central -->
+                  <circle cx="150" cy="110" r="8" fill="rgba(198,161,110,0.15)" stroke="#C6A16E" stroke-width="1"/>
+                  <circle cx="150" cy="110" r="3" fill="#C6A16E" class="os-core-pulse"/>
+                  <!-- Nœuds sur orbite extérieure -->
+                  <circle cx="150" cy="30" r="4" fill="#C6A16E" opacity="0.9" class="os-node"/>
+                  <circle cx="226" cy="154" r="4" fill="#C6A16E" opacity="0.9" class="os-node"/>
+                  <circle cx="74" cy="154" r="4" fill="#C6A16E" opacity="0.9" class="os-node"/>
+                  <!-- Nœuds sur orbite intermédiaire -->
+                  <circle cx="205" cy="110" r="3" fill="#C6A16E" opacity="0.6"/>
+                  <circle cx="95" cy="110" r="3" fill="#C6A16E" opacity="0.6"/>
+                  <!-- Lignes de connexion -->
+                  <line x1="150" y1="30" x2="150" y2="102" stroke="rgba(198,161,110,0.15)" stroke-width="1"/>
+                  <line x1="226" y1="154" x2="157" y2="116" stroke="rgba(198,161,110,0.15)" stroke-width="1"/>
+                  <line x1="74" y1="154" x2="143" y2="116" stroke="rgba(198,161,110,0.15)" stroke-width="1"/>
+                  <!-- Labels -->
+                  <text x="150" y="18" text-anchor="middle" fill="#C6A16E" font-family="'Jost', sans-serif" font-size="7" letter-spacing="2" opacity="0.9">CONTENU</text>
+                  <text x="244" y="158" text-anchor="start" fill="#C6A16E" font-family="'Jost', sans-serif" font-size="7" letter-spacing="2" opacity="0.9">CLIENTS</text>
+                  <text x="56" y="158" text-anchor="end" fill="#C6A16E" font-family="'Jost', sans-serif" font-size="7" letter-spacing="2" opacity="0.9">REVENUS</text>
+                  <text x="150" y="200" text-anchor="middle" fill="rgba(198,161,110,0.45)" font-family="'Cormorant Garamond', serif" font-size="8" font-style="italic" letter-spacing="1">Autonomie</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROMISE BAR -->
+<div id="promise">
+  <div class="container">
+    <div class="promise-grid">
+      <div class="promise-item reveal">
+        <svg class="promise-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+        <div class="promise-text"><strong>8 modules complets</strong><span>Des fondations à l'installation complète du système</span></div>
+      </div>
+      <div class="promise-item reveal reveal-delay-1">
+        <svg class="promise-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <div class="promise-text"><strong>Une installation, pas une théorie</strong><span>Vous repartez avec un système réellement opérationnel</span></div>
+      </div>
+      <div class="promise-item reveal reveal-delay-2">
+        <svg class="promise-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+        <div class="promise-text"><strong>Bonus premium complet</strong><span>Prompts flows, scripts DM, templates email, pack Notion</span></div>
+      </div>
+      <div class="promise-item reveal reveal-delay-3">
+        <svg class="promise-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        <div class="promise-text"><strong>Un système qui travaille pour vous</strong><span>Une infrastructure qui génère de la valeur même au repos</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section id="problem" class="section">
+  <div class="container">
+    <div class="problem-inner">
+      <div class="problem-left reveal">
+        <div class="problem-quote">
+          Les marques qui grandissent ne travaillent pas forcément plus. Elles créent des infrastructures qui continuent d'exister même quand elles ne sont pas devant leur écran.
+        </div>
+        <div class="problem-source">
+          <div class="problem-source-line"></div>
+          <span>Kemora OS IA — Introduction</span>
+        </div>
+      </div>
+      <div class="problem-right">
+        <span class="label reveal">Le paradoxe de l'effort</span>
+        <h2 class="reveal reveal-delay-1" style="margin-bottom:1.5rem;">Vous ne pouvez pas multiplier<br>votre énergie à <em class="italic">l'infini</em>.</h2>
+        <p class="reveal reveal-delay-2">Pendant longtemps, réussir dans le digital signifiait produire plus. Publier plus. Répondre plus. Travailler plus. Être présent(e) partout, tout le temps. Puis une réalité apparaît : vous pouvez tout donner, et avoir pourtant l'impression que tout repose toujours sur vous.</p>
+        <ul class="problem-bullets reveal reveal-delay-3">
+          <li>Votre contenu dépend entièrement de votre énergie du jour</li>
+          <li>Vos ventes dépendent de votre présence permanente</li>
+          <li>Vos clients dépendent de vos réponses manuelles</li>
+          <li>Votre business dépend, au fond, de votre temps — et il est limité</li>
+          <li>Vous pensez manquer de motivation ou de discipline, alors qu'il vous manque un système</li>
+        </ul>
+        <p class="reveal reveal-delay-4" style="font-style:italic; color: var(--gold); font-family: var(--serif); font-size: 1.1rem;">Le problème n'est généralement pas l'effort. Le problème est l'absence de système.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container"><div class="divider-h reveal"></div></div>
+
+<!-- TRANSFORMATION -->
+<section id="transformation" class="section">
+  <div class="container">
+    <div class="transfo-header">
+      <span class="label reveal">La transformation</span>
+      <h2 class="reveal reveal-delay-1">À la fin de ce programme,<br>vous repartirez <em class="italic">avec</em></h2>
+      <p class="reveal reveal-delay-2">Kemora OS IA n'est pas une formation que l'on termine. C'est une infrastructure que l'on installe — un système complet, opérationnel, qui travaille pour vous même lorsque vous vous reposez.</p>
+    </div>
+    <div class="before-after">
+      <div class="ba-col before reveal">
+        <span class="ba-label">Aujourd'hui — Tout repose sur vous</span>
+        <ul class="ba-items">
+          <li>Votre contenu dépend de votre énergie</li>
+          <li>Aucun pipeline client structuré</li>
+          <li>Des automatisations inexistantes ou bancales</li>
+          <li>Aucune séquence de conversion en place</li>
+          <li>Pas de vision claire de vos chiffres</li>
+          <li>Une activité qui s'arrête quand vous vous arrêtez</li>
+        </ul>
+      </div>
+      <div class="ba-arrow reveal reveal-delay-1">→</div>
+      <div class="ba-col after reveal reveal-delay-2">
+        <span class="ba-label">Après — Une infrastructure installée</span>
+        <ul class="ba-items">
+          <li>Une machine à contenu organisée et automatisée</li>
+          <li>Un CRM opérationnel avec pipeline complet</li>
+          <li>Des automatisations installées et testées</li>
+          <li>Des séquences de conversion prêtes à l'emploi</li>
+          <li>Un dashboard business pour piloter votre croissance</li>
+          <li>Une vision claire et une infrastructure évolutive</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTENU -->
+<section id="contenu" class="section">
+  <div class="container">
+    <div class="contenu-header">
+      <span class="label reveal">Le programme</span>
+      <h2 class="reveal reveal-delay-1">Son <em class="italic">contenu</em></h2>
+      <p class="reveal reveal-delay-2">Un parcours complet en 8 modules pour construire, étape par étape, votre infrastructure business automatisée — jusqu'à l'installation complète du système.</p>
+    </div>
+
+    <div class="chapters-grid">
+      <div class="chapter-card reveal">
+        <span class="chapter-num">01</span>
+        <span class="chapter-tag">Module 1</span>
+        <div class="chapter-title">Les Fondations</div>
+        <div class="chapter-desc">Poser les bases solides de votre business automatisé avant toute chose.</div>
+      </div>
+      <div class="chapter-card reveal reveal-delay-1">
+        <span class="chapter-num">02</span>
+        <span class="chapter-tag">Module 2</span>
+        <div class="chapter-title">La Machine à Contenu</div>
+        <div class="chapter-desc">Construire un système de production qui ne dépend plus de votre énergie.</div>
+      </div>
+      <div class="chapter-card reveal reveal-delay-1">
+        <span class="chapter-num">03</span>
+        <span class="chapter-tag">Module 3</span>
+        <div class="chapter-title">L'Attraction</div>
+        <div class="chapter-desc">Automatiser l'acquisition pour attirer en continu, sans effort manuel.</div>
+      </div>
+      <div class="chapter-card reveal reveal-delay-2">
+        <span class="chapter-num">04</span>
+        <span class="chapter-tag">Module 4</span>
+        <div class="chapter-title">Centralisation &amp; IA Conversationnelle</div>
+        <div class="chapter-desc">Regrouper tous vos canaux dans un seul espace de contrôle intelligent.</div>
+      </div>
+      <div class="chapter-card reveal reveal-delay-2">
+        <span class="chapter-num">05</span>
+        <span class="chapter-tag">Module 5</span>
+        <div class="chapter-title">Email Marketing &amp; Nurturing IA</div>
+        <div class="chapter-desc">Accompagner et convertir vos prospects automatiquement, sur la durée.</div>
+      </div>
+      <div class="chapter-card reveal reveal-delay-3">
+        <span class="chapter-num">06</span>
+        <span class="chapter-tag">Module 6</span>
+        <div class="chapter-title">CRM &amp; Parcours Client Automatisé</div>
+        <div class="chapter-desc">Un pipeline complet qui suit chaque client, du premier contact à la fidélisation.</div>
+      </div>
+      <div class="chapter-card reveal reveal-delay-3">
+        <span class="chapter-num">07</span>
+        <span class="chapter-tag">Module 7</span>
+        <div class="chapter-title">Expansion &amp; Scaling IA</div>
+        <div class="chapter-desc">Amplifier votre impact et faire grandir votre système sans multiplier votre temps.</div>
+      </div>
+      <div class="chapter-card reveal reveal-delay-4">
+        <span class="chapter-num">08</span>
+        <span class="chapter-tag">Module 8</span>
+        <div class="chapter-title">Installation Complète du Système</div>
+        <div class="chapter-desc">Assembler chaque brique en une infrastructure autonome, opérationnelle.</div>
+      </div>
+    </div>
+
+    <!-- Bonus stack -->
+    <span class="label reveal" style="display:block; margin-bottom:1.5rem;">Bonus premium inclus</span>
+    <div class="bonus-stack reveal">
+      <div class="bonus-item">
+        <span class="bonus-tag-top">Bonus 1</span>
+        <div class="bonus-item-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 9h8M8 13h6M3 5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"/></svg>
+        </div>
+        <div class="bonus-item-title">Prompts Flows prêts à copier</div>
+      </div>
+      <div class="bonus-item">
+        <span class="bonus-tag-top">Bonus 2</span>
+        <div class="bonus-item-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 12h8M8 8h8M8 16h5"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+        </div>
+        <div class="bonus-item-title">Scripts DM Premium</div>
+      </div>
+      <div class="bonus-item">
+        <span class="bonus-tag-top">Bonus 3</span>
+        <div class="bonus-item-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16v12H5.17L4 17.17V4z"/><path d="M8 9h8M8 12h5"/></svg>
+        </div>
+        <div class="bonus-item-title">Templates Email</div>
+      </div>
+      <div class="bonus-item">
+        <span class="bonus-tag-top">Bonus 4</span>
+        <div class="bonus-item-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+        </div>
+        <div class="bonus-item-title">Checklist Business Automatisé</div>
+      </div>
+      <div class="bonus-item">
+        <span class="bonus-tag-top">Bonus 5</span>
+        <div class="bonus-item-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M3 9h6"/></svg>
+        </div>
+        <div class="bonus-item-title">Pack Notion</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container"><div class="divider-h reveal"></div></div>
+
+<!-- RESULTS -->
+<section id="results" class="section">
+  <div class="container">
+    <div class="results-header">
+      <span class="label reveal">L'IA comme amplificateur</span>
+      <h2 class="reveal reveal-delay-1">L'IA ne remplace pas votre identité.<br><em class="italic">Elle amplifie ce que vous créez déjà.</em></h2>
+      <p class="reveal reveal-delay-2">Kemora OS IA agit sur quatre leviers qui, ensemble, transforment votre activité en écosystème autonome.</p>
+    </div>
+    <div class="case-study reveal">
+      <span class="case-study-tag">Les 4 leviers du système</span>
+      <div class="case-results" style="grid-template-columns: repeat(4,1fr);">
+        <div class="case-stat">
+          <span class="case-stat-num" style="font-size:1.4rem;">Produire</span>
+          <span class="case-stat-label">Plus intelligemment — créer davantage de contenu avec moins d'énergie mentale.</span>
+        </div>
+        <div class="case-stat">
+          <span class="case-stat-num" style="font-size:1.4rem;">Répondre</span>
+          <span class="case-stat-label">Plus rapidement — automatiser les interactions répétitives sans perdre votre authenticité.</span>
+        </div>
+        <div class="case-stat">
+          <span class="case-stat-num" style="font-size:1.4rem;">Centraliser</span>
+          <span class="case-stat-label">Votre activité — regrouper tous vos canaux dans un seul espace de contrôle.</span>
+        </div>
+        <div class="case-stat">
+          <span class="case-stat-num" style="font-size:1.4rem;">Automatiser</span>
+          <span class="case-stat-label">Les répétitions — transformer votre business en écosystème autonome.</span>
+        </div>
+      </div>
+      <div class="case-quote">
+        L'IA seule ne crée rien. Un outil sans structure reste un outil. Cette formation a été créée pour vous permettre de construire votre propre système d'exploitation business.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TARGET -->
+<section id="target" class="section">
+  <div class="container">
+    <div class="target-grid">
+      <div class="target-left">
+        <span class="label reveal">Pour qui</span>
+        <h2 class="reveal reveal-delay-1">Cette formation est faite pour vous <em class="italic">si…</em></h2>
+        <div class="target-cards">
+          <div class="target-card reveal reveal-delay-1">
+            <div class="target-check">✓</div>
+            <div class="target-card-text">
+              <strong>Vous voulez installer un système complet, pas juste apprendre</strong>
+              <span>Kemora OS IA est la formation la plus avancée : vous repartez avec une infrastructure réellement opérationnelle.</span>
+            </div>
+          </div>
+          <div class="target-card reveal reveal-delay-1">
+            <div class="target-check">✓</div>
+            <div class="target-card-text">
+              <strong>Vous voulez une machine à contenu, clients et revenus</strong>
+              <span>Un écosystème qui produit, attire et convertit même lorsque vous ne travaillez pas.</span>
+            </div>
+          </div>
+          <div class="target-card reveal reveal-delay-2">
+            <div class="target-check">✓</div>
+            <div class="target-card-text">
+              <strong>Vous voulez centraliser et automatiser l'ensemble de votre activité</strong>
+              <span>CRM, parcours client, séquences, dashboard — tout connecté dans un seul système.</span>
+            </div>
+          </div>
+          <div class="target-card reveal reveal-delay-3">
+            <div class="target-check">✓</div>
+            <div class="target-card-text">
+              <strong>Vous maîtrisez déjà les bases et voulez passer à l'échelle</strong>
+              <span>Expansion, scaling et installation complète : le niveau le plus abouti de l'écosystème Kemora.</span>
+            </div>
+          </div>
+          <div class="target-card reveal reveal-delay-4">
+            <div class="target-check">✓</div>
+            <div class="target-card-text">
+              <strong>Vous voulez construire quelque chose qui travaille avec vous</strong>
+              <span>L'objectif n'est plus seulement de travailler — c'est de bâtir une infrastructure qui dure.</span>
+            </div>
+          </div>
+        </div>
+        <div class="not-for reveal">
+          <span class="not-for-label">Ce n'est pas pour vous si…</span>
+          <ul>
+            <li>Vous ne cherchez pas à faire grandir votre activité</li>
+            <li>Vous cherchez une formation théorique sans installation concrète</li>
+            <li>Vous n'êtes pas prêt(e) à construire un véritable système complet</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="target-right">
+        <div class="glass-card reveal">
+          <span class="label" style="display:block; margin-bottom:1.5rem;">Ce que vous obtenez</span>
+          <div style="font-family:var(--serif); font-size:1.5rem; margin-bottom:0.3rem;">Kemora OS IA</div>
+          <div style="font-size:0.75rem; color:var(--gold); margin-bottom:2rem; font-style:italic; letter-spacing:0.06em;">Formation · Niveau Avancé</div>
+          <div class="divider-h" style="margin-bottom:2rem;"></div>
+          <ul style="list-style:none; margin-bottom:2rem;">
+            <li style="display:flex; gap:0.8rem; align-items:baseline; padding:0.5rem 0; border-bottom:1px solid var(--border2); font-size:0.82rem; color:var(--gold); font-family:var(--serif); font-style:italic;">Architecture complète. Zéro dilution.</li>
+            <li style="display:flex; gap:0.8rem; align-items:baseline; padding:0.5rem 0; border-bottom:1px solid var(--border2); font-size:0.82rem; color:var(--muted);"><span style="color:var(--gold);">→</span> Machine à contenu &amp; attraction automatisée</li>
+            <li style="display:flex; gap:0.8rem; align-items:baseline; padding:0.5rem 0; border-bottom:1px solid var(--border2); font-size:0.82rem; color:var(--muted);"><span style="color:var(--gold);">→</span> CRM, parcours client &amp; nurturing IA</li>
+            <li style="display:flex; gap:0.8rem; align-items:baseline; padding:0.5rem 0; border-bottom:1px solid var(--border2); font-size:0.82rem; color:var(--muted);"><span style="color:var(--gold);">→</span> Expansion, scaling &amp; installation complète</li>
+            <li style="display:flex; gap:0.8rem; align-items:baseline; padding:0.5rem 0; border-bottom:1px solid var(--border2); font-size:0.82rem; color:var(--muted);"><span style="color:var(--gold);">→</span> Bonus : Prompts Flows prêts à copier</li>
+            <li style="display:flex; gap:0.8rem; align-items:baseline; padding:0.5rem 0; border-bottom:1px solid var(--border2); font-size:0.82rem; color:var(--muted);"><span style="color:var(--gold);">→</span> Bonus : Scripts DM Premium</li>
+            <li style="display:flex; gap:0.8rem; align-items:baseline; padding:0.5rem 0; border-bottom:1px solid var(--border2); font-size:0.82rem; color:var(--muted);"><span style="color:var(--gold);">→</span> Bonus : Templates Email &amp; Checklist Business</li>
+            <li style="display:flex; gap:0.8rem; align-items:baseline; padding:0.5rem 0; font-size:0.82rem; color:var(--muted);"><span style="color:var(--gold);">→</span> Bonus : Pack Notion complet</li>
+          </ul>
+          <a href="#pricing" class="btn-gold" style="width:100%; justify-content:center;">Accéder à la formation</a>
+          <p style="text-align:center; font-size:0.7rem; color:var(--muted); margin-top:1rem; letter-spacing:0.06em;">Paiement sécurisé · Accès immédiat</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="section">
+  <div class="pricing-bg"></div>
+  <div class="container">
+    <div class="pricing-inner">
+      <span class="label reveal">Investissement</span>
+      <h2 class="reveal reveal-delay-1">Installer votre<br><em class="italic">système complet</em></h2>
+      <p class="sub reveal reveal-delay-2">Un accès complet aux 8 modules, aux 5 bonus premium et à l'installation complète de votre infrastructure business automatisée.</p>
+      <div class="price-card reveal reveal-delay-2">
+        <span class="price-anchor">Valeur estimée : 690 €</span>
+        <div class="price-main"><span class="price-currency">€</span>347</div>
+        <span class="price-access">Accès immédiat — Paiement unique</span>
+        <div class="price-divider"></div>
+        <ul class="price-includes">
+          <li><span>✓</span> Formation complète Kemora OS IA — 8 modules</li>
+          <li><span>✓</span> Module 1 — Les Fondations</li>
+          <li><span>✓</span> Module 2 — La Machine à Contenu</li>
+          <li><span>✓</span> Modules 3 &amp; 4 — Attraction &amp; Centralisation IA</li>
+          <li><span>✓</span> Modules 5 &amp; 6 — Email Marketing &amp; CRM automatisé</li>
+          <li><span>✓</span> Modules 7 &amp; 8 — Scaling &amp; Installation complète</li>
+          <li><span>✓</span> Bonus : Prompts Flows prêts à copier</li>
+          <li><span>✓</span> Bonus : Scripts DM Premium</li>
+          <li><span>✓</span> Bonus : Templates Email &amp; Checklist Business Automatisé</li>
+          <li><span>✓</span> Bonus : Pack Notion complet</li>
+        </ul>
+        <div class="price-cta-wrap">
+          <a href="#" class="btn-gold" style="width:100%; justify-content:center; font-size:0.82rem; padding:1.1rem 2rem;">Accéder à la formation</a>
+          <div class="price-secure">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.35C16.5 22.15 20 17.25 20 12V6l-8-4z"/></svg>
+            Paiement 100% sécurisé · Livraison instantanée par e-mail
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="section">
+  <div class="container">
+    <div class="faq-header">
+      <span class="label reveal">Questions fréquentes</span>
+      <h2 class="reveal reveal-delay-1">Ce que vous vous demandez <em class="italic">peut-être</em></h2>
+      <p class="reveal reveal-delay-2">Des réponses directes avant de décider.</p>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item reveal">
+        <button class="faq-q" onclick="toggleFaq(this)">À quel niveau s'adresse cette formation ?<div class="faq-icon">+</div></button>
+        <div class="faq-a">Kemora OS IA est le niveau le plus avancé de l'écosystème. Elle s'adresse à ceux qui veulent installer un système complet et autonome. Si vous débutez, commencez par CORE OS IA, puis Business OS IA, avant d'arriver à celle-ci.</div>
+      </div>
+      <div class="faq-item reveal reveal-delay-1">
+        <button class="faq-q" onclick="toggleFaq(this)">Qu'est-ce que vous repartez concrètement avec ?<div class="faq-icon">+</div></button>
+        <div class="faq-a">Une infrastructure complète et opérationnelle : machine à contenu, CRM avec pipeline, automatisations testées, séquences de conversion prêtes à l'emploi, dashboard de pilotage et une vision claire. Kemora OS IA ne se termine pas — elle s'installe.</div>
+      </div>
+      <div class="faq-item reveal reveal-delay-1">
+        <button class="faq-q" onclick="toggleFaq(this)">S'agit-il d'une formation théorique ?<div class="faq-icon">+</div></button>
+        <div class="faq-a">Non. Kemora OS IA est une infrastructure que l'on installe, pas une simple formation. Les 8 modules vous guident jusqu'à l'installation complète d'un système qui produit, attire et convertit — même lorsque vous ne travaillez pas.</div>
+      </div>
+      <div class="faq-item reveal reveal-delay-2">
+        <button class="faq-q" onclick="toggleFaq(this)">Quelle est la différence avec CORE OS IA et Business OS IA ?<div class="faq-icon">+</div></button>
+        <div class="faq-a">CORE OS IA pose les fondations (niveau débutant). Business OS IA construit l'architecture (niveau intermédiaire). Kemora OS IA est le niveau le plus avancé : l'écosystème complet, jusqu'à l'installation d'un système autonome. Les trois forment une progression cohérente.</div>
+      </div>
+      <div class="faq-item reveal reveal-delay-2">
+        <button class="faq-q" onclick="toggleFaq(this)">Comment je reçois la formation après l'achat ?<div class="faq-icon">+</div></button>
+        <div class="faq-a">Immédiatement par e-mail, en format PDF téléchargeable. Tous les chapitres, bonus et ressources sont livrés en une seule fois. Vous pouvez y accéder sur tous vos appareils et y revenir autant de fois que nécessaire.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section id="final-cta">
+  <div class="final-cta-bg"></div>
+  <div class="container">
+    <div class="final-cta-inner">
+      <span class="label reveal">Une seule décision vous sépare — Passez à l'action</span>
+      <h2 class="reveal reveal-delay-1">Une entreprise automatisée<br>n'est pas un rêve. C'est une <em class="italic">architecture</em>.</h2>
+      <p class="reveal reveal-delay-2">Chaque outil installé, chaque automatisation activée, chaque séquence programmée est une décision que vous n'aurez plus jamais à prendre manuellement. C'est ça, la liberté par le système. Bienvenue dans Kemora OS IA.</p>
+      <span class="final-cta-price reveal reveal-delay-3">À vous. Maintenant.</span>
+      <div class="reveal reveal-delay-4">
+        <a href="#" class="btn-gold" style="font-size:0.82rem; padding:1.1rem 3rem;">Accéder à Kemora OS IA</a>
+      </div>
+      <p style="margin-top:1.5rem; font-size:0.72rem; color:var(--muted); letter-spacing:0.08em;" class="reveal">Paiement sécurisé · Livraison instantanée</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Kemora Agency</div>
+  <div class="footer-links">
+    <a href="#">Mentions légales</a>
+    <a href="#">Politique de confidentialité</a>
+    <a href="#">Contact</a>
+  </div>
+  <div class="footer-copy">© 2026 Kemora Agency — Tous droits réservés</div>
+</footer>
+
+<script>
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  window.addEventListener('scroll', () => {
+    document.querySelector('nav').style.borderBottomColor = window.scrollY > 50 ? 'rgba(198,161,110,0.15)' : 'rgba(198,161,110,0.06)';
+  });
+</script>
+</body>
+</html>
