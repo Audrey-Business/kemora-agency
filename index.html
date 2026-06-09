@@ -7,17 +7,19 @@
 <meta name="description" content="Écosystème digital premium dédié à l'IA, l'automatisation et les systèmes de croissance intelligents.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://kemora-agency.com/">
-<link rel="alternate" hreflang="fr" href="https://kemora-agency.com/fr/index.html">
-<link rel="alternate" hreflang="en" href="https://kemora-agency.com/en/index.html">
-<link rel="alternate" hreflang="es" href="https://kemora-agency.com/es/index.html">
-<link rel="alternate" hreflang="de" href="https://kemora-agency.com/de/index.html">
-<link rel="alternate" hreflang="pt" href="https://kemora-agency.com/pt/index.html">
-<link rel="alternate" hreflang="it" href="https://kemora-agency.com/it/index.html">
-<link rel="alternate" hreflang="x-default" href="https://kemora-agency.com/fr/index.html">
+<link rel="alternate" hreflang="fr" href="https://kemora-agency.com/fr/">
+<link rel="alternate" hreflang="en" href="https://kemora-agency.com/en/">
+<link rel="alternate" hreflang="es" href="https://kemora-agency.com/es/">
+<link rel="alternate" hreflang="de" href="https://kemora-agency.com/de/">
+<link rel="alternate" hreflang="pt" href="https://kemora-agency.com/pt/">
+<link rel="alternate" hreflang="it" href="https://kemora-agency.com/it/">
+<link rel="alternate" hreflang="x-default" href="https://kemora-agency.com/fr/">
 <meta name="theme-color" content="#C6A16E">
 <link rel="icon" href="/assets/favicon/favicon.ico">
 <link rel="apple-touch-icon" href="/assets/favicon/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.json">
+<!-- No-JS fallback: redirect to /fr/ after 0s -->
+<noscript><meta http-equiv="refresh" content="0;url=/fr/"></noscript>
 <style>
   body { margin: 0; background: #050505; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
   .dot { width: 8px; height: 8px; border-radius: 50%; background: #C6A16E; animation: pulse 1s infinite; }
@@ -30,14 +32,15 @@
 (function(){
   var supported = ['fr','en','es','de','pt','it'];
   var stored = localStorage.getItem('kemora-lang');
-  if(stored && supported.includes(stored)){
-    window.location.replace('/'+stored+'/index.html');
+  if (stored && supported.indexOf(stored) !== -1) {
+    window.location.replace('/' + stored + '/');
     return;
   }
-  var userLang = ((navigator.language || navigator.userLanguage || 'fr').slice(0,2)).toLowerCase();
-  var detected = supported.includes(userLang) ? userLang : 'fr';
+  var raw = (navigator.language || navigator.userLanguage || 'fr');
+  var userLang = raw.slice(0, 2).toLowerCase();
+  var detected = supported.indexOf(userLang) !== -1 ? userLang : 'fr';
   localStorage.setItem('kemora-lang', detected);
-  window.location.replace('/'+detected+'/index.html');
+  window.location.replace('/' + detected + '/');
 })();
 </script>
 </body>
