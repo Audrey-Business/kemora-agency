@@ -272,11 +272,11 @@
 
       <!-- Form -->
       <div class="form-wrap reveal reveal-delay-1">
-        <form id="contactForm" action="https://go.kemora-agency.com/f6f64125" method="POST" onsubmit="return handleSubmit(event)">
+        <form id="contactForm" action="https://go.kemora-agency.com/f6f64125" method="POST" onsubmit="return handleSubmit(event)" target="systeme-target">
           <div class="field-row">
             <div class="field">
               <label for="prenom">Prénom <span class="req">*</span></label>
-              <input type="text" id="prenom" name="prenom" placeholder="Votre prénom" required>
+              <input type="text" id="prenom" name="first_name" placeholder="Votre prénom" required>
             </div>
             <div class="field">
               <label for="nom">Nom <span class="req">*</span></label>
@@ -333,6 +333,7 @@
 </main>
 
 <!-- FOOTER -->
+<iframe name="systeme-target" style="display:none;width:0;height:0;border:0;" aria-hidden="true" tabindex="-1"></iframe>
 <footer>
   <div class="footer-brand">Kemora Agency</div>
   <div class="footer-links">
@@ -347,19 +348,23 @@
   function handleSubmit(e) {
     e.preventDefault();
     var f = document.getElementById('contactForm');
-    var body = new URLSearchParams({
-      'contact[name]': (f.querySelector('[name="prenom"]').value + ' ' + f.querySelector('[name="nom"]').value).trim(),
-      'contact[email]': f.querySelector('[name="email"]').value,
-      'contact[fields][subject]': f.querySelector('[name="objet"]').value,
-      'contact[fields][message]': f.querySelector('[name="message"]').value
-    }).toString();
-    fetch('https://go.kemora-agency.com/f6f64125', {
-      method: 'POST', mode: 'no-cors',
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      body: body
-    });
+    var firstName = f.querySelector('[name="first_name"]') ? f.querySelector('[name="first_name"]').value : '';
+    var email = f.querySelector('[name="email"]') ? f.querySelector('[name="email"]').value : '';
     f.style.display = 'none';
     document.getElementById('formSuccess').classList.add('show');
+    var hf = document.createElement('form');
+    hf.method = 'POST';
+    hf.action = 'https://go.kemora-agency.com/f6f64125';
+    hf.target = 'systeme-target';
+    hf.style.display = 'none';
+    [['first_name', firstName], ['email', email]].forEach(function(kv) {
+      var inp = document.createElement('input');
+      inp.type = 'hidden';
+      inp.name = kv[0]; inp.value = kv[1];
+      hf.appendChild(inp);
+    });
+    document.body.appendChild(hf);
+    hf.submit();
     return false;
   }
 
