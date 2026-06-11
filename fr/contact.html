@@ -272,17 +272,6 @@
 
       <!-- Form -->
       <div class="form-wrap reveal reveal-delay-1">
-        <!--
-          ════════════════════════════════════════════════════════════
-          ZONE FORMULAIRE — À CONNECTER AU DÉPLOIEMENT
-          ────────────────────────────────────────────────────────────
-          Pour relier ce formulaire à Systeme.io :
-          remplacer l'attribut action="..." ci-dessous par l'URL
-          de ton formulaire Systeme.io, ou intégrer le champ "hidden"
-          fourni par Systeme.io. La structure des champs est prête.
-          (En attendant, le formulaire affiche un message de confirmation.)
-          ════════════════════════════════════════════════════════════
-        -->
         <form id="contactForm" action="https://go.kemora-agency.com/f6f64125" method="POST" onsubmit="return handleSubmit(event)">
           <div class="field-row">
             <div class="field">
@@ -357,9 +346,19 @@
 <script>
   function handleSubmit(e) {
     e.preventDefault();
-    // ── Au déploiement : ici se fera l'envoi réel vers Systeme.io ──
-    // Pour l'instant, on affiche simplement la confirmation visuelle.
-    document.getElementById('contactForm').style.display = 'none';
+    var f = document.getElementById('contactForm');
+    var body = new URLSearchParams({
+      'contact[name]': (f.querySelector('[name="prenom"]').value + ' ' + f.querySelector('[name="nom"]').value).trim(),
+      'contact[email]': f.querySelector('[name="email"]').value,
+      'contact[fields][subject]': f.querySelector('[name="objet"]').value,
+      'contact[fields][message]': f.querySelector('[name="message"]').value
+    }).toString();
+    fetch('https://go.kemora-agency.com/f6f64125', {
+      method: 'POST', mode: 'no-cors',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: body
+    });
+    f.style.display = 'none';
     document.getElementById('formSuccess').classList.add('show');
     return false;
   }
