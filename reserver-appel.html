@@ -193,7 +193,7 @@
 
       <!-- Form -->
       <div class="form-wrap reveal reveal-delay-1">
-        <form id="callForm" action="https://go.kemora-agency.com/4c191075" method="POST" onsubmit="return handleSubmit(event)" target="systeme-target">
+        <form id="callForm" action="https://go.kemora-agency.com/4c191075" method="POST" onsubmit="return handleSubmit(event)">
           <div class="field-row">
             <div class="field">
               <label for="prenom">Prénom <span class="req">*</span></label>
@@ -254,7 +254,6 @@
 </main>
 
 <!-- FOOTER -->
-<iframe name="systeme-target" style="display:none;width:0;height:0;border:0;" aria-hidden="true" tabindex="-1"></iframe>
 <footer>
   <div class="footer-brand">Kemora Agency</div>
   <div class="footer-links">
@@ -269,23 +268,16 @@
   function handleSubmit(e) {
     e.preventDefault();
     var f = document.getElementById('callForm');
-    var firstName = f.querySelector('[name="first_name"]') ? f.querySelector('[name="first_name"]').value : '';
-    var email = f.querySelector('[name="email"]') ? f.querySelector('[name="email"]').value : '';
+    var firstName = (f.querySelector('[name="first_name"]') || {value:''}).value.trim();
+    var lastName  = (f.querySelector('[name="nom"]')        || {value:''}).value.trim();
+    var email     = (f.querySelector('[name="email"]')      || {value:''}).value.trim();
+    fetch('https://api.systeme.io/api/contacts', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'X-API-Key': '710k2e9ghdz9y0ob0dnkhv838yxec9lihduawg7jcora7rvo2ynyctq4q2kso0bz'},
+      body: JSON.stringify({email: email, first_name: firstName, last_name: lastName, tags: ['reservation-appel-kemora']})
+    }).catch(function(){});
     f.style.display = 'none';
     document.getElementById('formSuccess').classList.add('show');
-    var hf = document.createElement('form');
-    hf.method = 'POST';
-    hf.action = 'https://go.kemora-agency.com/4c191075';
-    hf.target = 'systeme-target';
-    hf.style.display = 'none';
-    [['first_name', firstName], ['email', email]].forEach(function(kv) {
-      var inp = document.createElement('input');
-      inp.type = 'hidden';
-      inp.name = kv[0]; inp.value = kv[1];
-      hf.appendChild(inp);
-    });
-    document.body.appendChild(hf);
-    hf.submit();
     return false;
   }
 

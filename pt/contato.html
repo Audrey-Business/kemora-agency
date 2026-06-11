@@ -235,7 +235,7 @@
 <section class="section">
   <div class="container">
     <div class="contact-grid">
-      <form id="contactForm" class="contact-form reveal" method="post" action="https://go.kemora-agency.com/f6f64125" onsubmit="return handleSubmit(event)" target="systeme-target">
+      <form id="contactForm" class="contact-form reveal" method="post" action="https://go.kemora-agency.com/f6f64125" onsubmit="return handleSubmit(event)">
         <label for="name">Nome completo</label>
         <input type="text" id="name" name="first_name" required autocomplete="name">
         <label for="email">Endereço de e-mail</label>
@@ -264,7 +264,6 @@
     </div>
   </div>
 </section>
-<iframe name="systeme-target" style="display:none;width:0;height:0;border:0;" aria-hidden="true" tabindex="-1"></iframe>
 <footer>
   <div class="footer-inner">
     <div class="footer-brand">Kemora Agency</div>
@@ -299,7 +298,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js');}
 var _obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');_obs.unobserve(e.target);}});},{threshold:0.1});
 document.querySelectorAll('.reveal').forEach(function(el){_obs.observe(el);});
 window.addEventListener('scroll',function(){var nav=document.getElementById('mainNav');if(nav)nav.style.borderBottomColor=window.scrollY>50?'rgba(198,161,110,0.15)':'rgba(198,161,110,0.06)';});
-function handleSubmit(e){e.preventDefault();var form=e.target;var fn=form.querySelector('[name="first_name"]');var em=form.querySelector('[name="email"]');var firstName=fn?fn.value:'';var email=em?em.value:'';form.innerHTML='<div style=\"text-align:center;padding:2rem 0;\"><svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#C6A16E\" stroke-width=\"1.5\" style=\"margin-bottom:1rem;display:block;margin-left:auto;margin-right:auto;\"><path d=\"M5 12l5 5L20 7\"/><\/svg><p style=\"font-family:var(--serif);font-size:1.5rem;color:var(--white);margin-bottom:0.8rem;\">Mensagem enviada<\/p><p style=\"font-size:0.85rem;color:var(--muted);\">Responderemos em 24 a 48 horas úteis.<\/p><\/div>';var hf=document.createElement('form');hf.method='POST';hf.action='https://go.kemora-agency.com/f6f64125';hf.target='systeme-target';hf.style.display='none';[['first_name',firstName],['email',email]].forEach(function(kv){var i=document.createElement('input');i.type='hidden';i.name=kv[0];i.value=kv[1];hf.appendChild(i);});document.body.appendChild(hf);hf.submit();return false;}
+function handleSubmit(e){e.preventDefault();var form=e.target;var fn=form.querySelector('[name="first_name"]');var em=form.querySelector('[name="email"]');var full=(fn?fn.value:'').trim();var parts=full.split(' ');var firstName=parts[0]||'';var lastName=parts.slice(1).join(' ');var email=em?em.value.trim():'';fetch('https://api.systeme.io/api/contacts',{method:'POST',headers:{'Content-Type':'application/json','X-API-Key':'710k2e9ghdz9y0ob0dnkhv838yxec9lihduawg7jcora7rvo2ynyctq4q2kso0bz'},body:JSON.stringify({email:email,first_name:firstName,last_name:lastName,tags:['contact-kemora']})}).catch(function(){});form.innerHTML='<div style=\"text-align:center;padding:2rem 0;\"><svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#C6A16E\" stroke-width=\"1.5\" style=\"margin-bottom:1rem;display:block;margin-left:auto;margin-right:auto;\"><path d=\"M5 12l5 5L20 7\"/><\/svg><p style=\"font-family:var(--serif);font-size:1.5rem;color:var(--white);margin-bottom:0.8rem;\">Mensagem enviada<\/p><p style=\"font-size:0.85rem;color:var(--muted);\">Responderemos em 24 a 48 horas úteis.<\/p><\/div>';return false;}
 </script>
 <script>function toggleMobileNav(){var btn=document.getElementById('navToggle');var menu=document.getElementById('navMobile');btn.classList.toggle('open');menu.classList.toggle('open');btn.setAttribute('aria-expanded',menu.classList.contains('open'));}</script>
 </body></html>
