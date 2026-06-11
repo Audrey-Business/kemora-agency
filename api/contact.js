@@ -17,6 +17,11 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'email and first_name are required' });
   }
 
+  // Systeme.io requires fields as an array of {slug, value} objects.
+  // Slugs: "first_name" for first name, "surname" for last name.
+  const fields = [{ slug: 'first_name', value: first_name }];
+  if (last_name) fields.push({ slug: 'surname', value: last_name });
+
   try {
     // Step 1: create (or update) the contact
     const createRes = await fetch(`${BASE_URL}/contacts`, {
@@ -25,7 +30,7 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json',
         'X-API-Key': API_KEY,
       },
-      body: JSON.stringify({ email, first_name, last_name: last_name || '' }),
+      body: JSON.stringify({ email, fields }),
     });
 
     // 201 = created, 200 = already exists (upsert)
