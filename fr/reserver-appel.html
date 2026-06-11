@@ -321,13 +321,13 @@
     var firstName = (f.querySelector('[name="first_name"]') || {value:''}).value.trim();
     var lastName  = (f.querySelector('[name="nom"]')        || {value:''}).value.trim();
     var email     = (f.querySelector('[name="email"]')      || {value:''}).value.trim();
-    fetch('https://api.systeme.io/api/contacts', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json', 'X-API-Key': '710k2e9ghdz9y0ob0dnkhv838yxec9lihduawg7jcora7rvo2ynyctq4q2kso0bz'},
-      body: JSON.stringify({email: email, first_name: firstName, last_name: lastName, tags: ['reservation-appel-kemora']})
-    }).catch(function(){});
     f.style.display = 'none';
     document.getElementById('formSuccess').classList.add('show');
+    fetch('/api/book', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({email: email, first_name: firstName, last_name: lastName})
+    }).catch(function(){});
     return false;
   }
 
