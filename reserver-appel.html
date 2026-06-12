@@ -206,6 +206,11 @@
           </div>
 
           <div class="field">
+            <label for="email">Adresse e-mail <span class="req">*</span></label>
+            <input type="email" id="email" name="email" placeholder="votre@email.com" required>
+          </div>
+
+          <div class="field">
             <label for="telephone">Numéro de téléphone <span class="req">*</span></label>
             <input type="tel" id="telephone" name="telephone" placeholder="06 00 00 00 00" required>
           </div>
@@ -268,16 +273,46 @@
   function handleSubmit(e) {
     e.preventDefault();
     var f = document.getElementById('callForm');
-    var firstName = (f.querySelector('[name="first_name"]') || {value:''}).value.trim();
-    var lastName  = (f.querySelector('[name="nom"]')        || {value:''}).value.trim();
-    var email     = (f.querySelector('[name="email"]')      || {value:''}).value.trim();
-    f.style.display = 'none';
-    document.getElementById('formSuccess').classList.add('show');
+    var btn = f.querySelector('.btn-submit');
+
+    var firstName  = (f.querySelector('[name="first_name"]') || {value:''}).value.trim();
+    var lastName   = (f.querySelector('[name="nom"]')        || {value:''}).value.trim();
+    var email      = (f.querySelector('[name="email"]')      || {value:''}).value.trim();
+    var telephone  = (f.querySelector('[name="telephone"]')  || {value:''}).value.trim();
+    var objectif   = (f.querySelector('[name="objectif"]')   || {value:''}).value.trim();
+    var creneaux   = (f.querySelector('[name="creneaux"]')   || {value:''}).value.trim();
+
+    btn.disabled = true;
+    btn.textContent = 'Envoi en cours…';
+
     fetch('/api/book', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({email: email, first_name: firstName, last_name: lastName})
-    }).catch(function(){});
+      body: JSON.stringify({
+        email: email,
+        first_name: firstName,
+        last_name: lastName,
+        telephone: telephone,
+        objectif: objectif,
+        creneaux: creneaux
+      })
+    })
+    .then(function(res) {
+      if (res.ok) {
+        f.style.display = 'none';
+        document.getElementById('formSuccess').classList.add('show');
+      } else {
+        btn.disabled = false;
+        btn.textContent = 'Demander mon appel';
+        alert('Une erreur est survenue. Veuillez réessayer ou nous contacter directement.');
+      }
+    })
+    .catch(function() {
+      btn.disabled = false;
+      btn.textContent = 'Demander mon appel';
+      alert('Connexion impossible. Vérifiez votre connexion internet et réessayez.');
+    });
+
     return false;
   }
 
