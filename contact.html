@@ -297,16 +297,47 @@
   function handleSubmit(e) {
     e.preventDefault();
     var f = document.getElementById('contactForm');
+    var btn = f.querySelector('.btn-submit');
+
     var firstName = (f.querySelector('[name="first_name"]') || {value:''}).value.trim();
     var lastName  = (f.querySelector('[name="nom"]')        || {value:''}).value.trim();
     var email     = (f.querySelector('[name="email"]')      || {value:''}).value.trim();
-    f.style.display = 'none';
-    document.getElementById('formSuccess').classList.add('show');
+    var objet     = (f.querySelector('[name="objet"]')      || {value:''}).value.trim();
+    var message   = (f.querySelector('[name="message"]')    || {value:''}).value.trim();
+
+    // Désactive le bouton pour éviter le double envoi
+    btn.disabled = true;
+    btn.textContent = 'Envoi en cours…';
+
     fetch('/api/contact', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({email: email, first_name: firstName, last_name: lastName})
-    }).catch(function(){});
+      body: JSON.stringify({
+        email: email,
+        first_name: firstName,
+        last_name: lastName,
+        objet: objet,
+        message: message
+      })
+    })
+    .then(function(res) {
+      if (res.ok) {
+        // Succès réel — on masque le formulaire et on affiche la confirmation
+        f.style.display = 'none';
+        document.getElementById('formSuccess').classList.add('show');
+      } else {
+        // Erreur API — on réactive le bouton et on informe
+        btn.disabled = false;
+        btn.textContent = 'Envoyer mon message';
+        alert('Une erreur est survenue. Veuillez réessayer ou nous contacter directement.');
+      }
+    })
+    .catch(function() {
+      btn.disabled = false;
+      btn.textContent = 'Envoyer mon message';
+      alert('Connexion impossible. Vérifiez votre connexion internet et réessayez.');
+    });
+
     return false;
   }
 

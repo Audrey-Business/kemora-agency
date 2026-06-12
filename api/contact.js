@@ -1,7 +1,6 @@
 // Vercel serverless function — contact form proxy to Systeme.io
 // Avoids CORS: browser POSTs here (same origin), this calls Systeme.io server-side.
 
-const API_KEY  = '710k2e9ghdz9y0ob0dnkhv838yxec9lihduawg7jcora7rvo2ynyctq4q2kso0bz';
 const BASE_URL = 'https://api.systeme.io/api';
 const TAG_ID   = 2049162; // "contact-kemora"
 
@@ -11,14 +10,19 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { email, first_name, last_name } = req.body || {};
+  const API_KEY = process.env.SYSTEME_API_KEY;
+  if (!API_KEY) {
+    console.error('SYSTEME_API_KEY is not set');
+    return res.status(500).json({ error: 'Server configuration error' });
+  }
+
+  const { email, first_name, last_name, message, objet } = req.body || {};
 
   if (!email || !first_name) {
     return res.status(400).json({ error: 'email and first_name are required' });
   }
 
   // Systeme.io requires fields as an array of {slug, value} objects.
-  // Slugs: "first_name" for first name, "surname" for last name.
   const fields = [{ slug: 'first_name', value: first_name }];
   if (last_name) fields.push({ slug: 'surname', value: last_name });
 
@@ -53,8 +57,12 @@ export default async function handler(req, res) {
     });
 
     if (tagRes.status !== 204 && tagRes.status !== 200) {
-      // Contact was created — tag failure is non-fatal, log but don't error
       console.error('Systeme.io tag error:', tagRes.status, await tagRes.text());
+    }
+
+    // Log message and objet for reference (non-blocking)
+    if (message || objet) {
+      console.log(`Contact ${contact.id} — objet: ${objet || 'N/A'} — message: ${message || 'N/A'}`);
     }
 
     return res.status(200).json({ success: true, id: contact.id });
