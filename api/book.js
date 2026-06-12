@@ -24,7 +24,8 @@ export default async function handler(req, res) {
 
   // Systeme.io requires fields as an array of {slug, value} objects.
   const fields = [{ slug: 'first_name', value: first_name }];
-  if (last_name) fields.push({ slug: 'surname', value: last_name });
+  if (last_name)  fields.push({ slug: 'surname',      value: last_name });
+  if (telephone)  fields.push({ slug: 'phone_number', value: telephone });
 
   try {
     // Step 1: create (or update) the contact
@@ -77,8 +78,8 @@ export default async function handler(req, res) {
     }
 
     // Log données supplémentaires
-    if (telephone || objectif || creneaux) {
-      console.log(`Réservation ${contact.id} — tél: ${telephone || 'N/A'} — objectif: ${objectif || 'N/A'} — créneaux: ${creneaux || 'N/A'}`);
+    if (objectif || creneaux) {
+      console.log(`Réservation ${contact.id} — objectif: ${objectif || 'N/A'} — créneaux: ${creneaux || 'N/A'}`);
     }
 
     return res.status(200).json({ success: true, id: contact.id });
