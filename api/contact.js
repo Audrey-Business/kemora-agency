@@ -37,14 +37,30 @@ export default async function handler(req, res) {
       body: JSON.stringify({ email, fields }),
     });
 
-    // 201 = created, 200 = already exists (upsert)
-    if (createRes.status !== 201 && createRes.status !== 200) {
+    // 201 = created, 200 = upsert, 422 = email déjà utilisé (contact existant)
+    let contact;
+    if (createRes.status === 201 || createRes.status === 200) {
+      contact = await createRes.json();
+    } else if (createRes.status === 422) {
+      // Contact existant — on le récupère via GET par email
+      const getRes = await fetch(`${BASE_URL}/contacts?email=${encodeURIComponent(email)}`, {
+        method: 'GET',
+        headers: { 'X-API-Key': API_KEY },
+      });
+      if (!getRes.ok) {
+        console.error('Systeme.io get contact error:', getRes.status, await getRes.text());
+        return res.status(502).json({ error: 'Failed to retrieve existing contact' });
+      }
+      const getData = await getRes.json();
+      contact = getData.items?.[0];
+      if (!contact) {
+        return res.status(502).json({ error: 'Contact not found after 422' });
+      }
+    } else {
       const err = await createRes.text();
       console.error('Systeme.io create contact error:', createRes.status, err);
       return res.status(502).json({ error: 'Failed to create contact' });
     }
-
-    const contact = await createRes.json();
 
     // Step 2: attach the tag
     const tagRes = await fetch(`${BASE_URL}/contacts/${contact.id}/tags`, {
