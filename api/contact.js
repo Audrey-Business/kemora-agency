@@ -5,7 +5,6 @@ const BASE_URL = 'https://api.systeme.io/api';
 const TAG_ID   = 2049162; // "contact-kemora"
 
 export default async function handler(req, res) {
-  // Only accept POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -22,12 +21,12 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'email and first_name are required' });
   }
 
-  // Systeme.io requires fields as an array of {slug, value} objects.
   const fields = [{ slug: 'first_name', value: first_name }];
   if (last_name) fields.push({ slug: 'surname', value: last_name });
+  if (objet)     fields.push({ slug: 'objet',   value: objet });
+  if (message)   fields.push({ slug: 'message', value: message });
 
   try {
-    // Step 1: create (or update) the contact
     const createRes = await fetch(`${BASE_URL}/contacts`, {
       method: 'POST',
       headers: {
@@ -37,12 +36,10 @@ export default async function handler(req, res) {
       body: JSON.stringify({ email, fields }),
     });
 
-    // 201 = created, 200 = upsert, 422 = email déjà utilisé (contact existant)
     let contact;
     if (createRes.status === 201 || createRes.status === 200) {
       contact = await createRes.json();
     } else if (createRes.status === 422) {
-      // Contact existant — on le récupère via GET par email
       const getRes = await fetch(`${BASE_URL}/contacts?email=${encodeURIComponent(email)}`, {
         method: 'GET',
         headers: { 'X-API-Key': API_KEY },
@@ -62,7 +59,6 @@ export default async function handler(req, res) {
       return res.status(502).json({ error: 'Failed to create contact' });
     }
 
-    // Step 2: attach the tag
     const tagRes = await fetch(`${BASE_URL}/contacts/${contact.id}/tags`, {
       method: 'POST',
       headers: {
@@ -74,11 +70,6 @@ export default async function handler(req, res) {
 
     if (tagRes.status !== 204 && tagRes.status !== 200) {
       console.error('Systeme.io tag error:', tagRes.status, await tagRes.text());
-    }
-
-    // Log message and objet for reference (non-blocking)
-    if (message || objet) {
-      console.log(`Contact ${contact.id} — objet: ${objet || 'N/A'} — message: ${message || 'N/A'}`);
     }
 
     return res.status(200).json({ success: true, id: contact.id });
